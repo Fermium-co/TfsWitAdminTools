@@ -1,6 +1,6 @@
 # TfsWitAdminTools
 # Overview
-A tools for TFS process template administration which can be used instead of "WITAdmin.exe" and "team explorer process editor".
+A handy tools for TFS process template administration which can be used instead of "WITAdmin.exe" and "team explorer process editor".
 
 ***
 
