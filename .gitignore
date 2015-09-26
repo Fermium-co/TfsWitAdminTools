@@ -3,7 +3,6 @@
 ################################################################################
 
 /packages
-/TfsWitAdminTools/bin/Debug
-/TfsWitAdminTools/obj/Debug
-/TfsWitAdminTools.Cmn/bin/Debug
-/TfsWitAdminTools.Cmn/obj/Debug
+**/bin/Debug
+**/obj/Debug
+*.suo
