@@ -77,7 +77,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DialogTools.cs" />
+    <Compile Include="DialogProvider.cs" />
+    <Compile Include="IDialogProvider.cs" />
     <Compile Include="ITFManager.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

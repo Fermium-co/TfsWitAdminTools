@@ -1,4 +1,5 @@
 ﻿using TfsWitAdminTools.Cmn;
+using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.ViewModel
 {
@@ -13,7 +14,7 @@ namespace TfsWitAdminTools.ViewModel
 
             BrowseCommand = new DelegateCommand(() =>
             {
-                var path = DialogTools.OpenBrowseDialog();
+                var path = DiManager.Current.Resolve<IDialogProvider>().OpenBrowseDialog();
                 Path = path;
             });
 
