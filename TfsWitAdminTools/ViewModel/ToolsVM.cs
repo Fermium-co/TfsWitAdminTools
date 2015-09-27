@@ -27,7 +27,7 @@ namespace TfsWitAdminTools.ViewModel
 
             SetAddressCommand = new DelegateCommand(() =>
             {
-                TFManager = DiManager.Current.Resolve<TFManager>(new { serverAddress = Address });
+                TFManager = DiManager.Current.Resolve<ITFManager>(new { serverAddress = Address });
                 GetProjectCollectionInfosCommand.Execute(this);
                 InitChildViewModelsCommand.Execute(this);
             },
@@ -220,13 +220,13 @@ namespace TfsWitAdminTools.ViewModel
 
         public IWitAdminService WIAdminService { get; set; }
 
-        public TFManager TFManager { get; set; }
+        public ITFManager TFManager { get; set; }
 
         #endregion
 
         #region Methods
 
-        private List<ProjectCollectionInfo> GetProjectCollectionInfos(TFManager tfManager)
+        private List<ProjectCollectionInfo> GetProjectCollectionInfos(ITFManager tfManager)
         {
             var projectCollections = tfManager.ProjectCollections;
             var teamProjects = tfManager.TeamProjects;

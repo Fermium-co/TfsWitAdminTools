@@ -27,7 +27,7 @@ namespace TfsWitAdminTools
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             DiManager.Current.Init();
-            DiManager.Current.Register<TFManager, TFManager>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ITFManager, TFManager>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<IConfigProvider, DefaultConfigProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IDialogProvider, DialogProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Singletone);
