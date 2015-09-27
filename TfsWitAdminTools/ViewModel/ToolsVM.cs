@@ -43,7 +43,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetAllTeamProjectsWITypesCommand = new DelegateCommand(() =>
             {
-                var teamProjects = CurrentProjectCollection.TeamProjectInfos;
+                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
                 foreach (var teamProject in teamProjects)
                 {
                     GetWITypes(teamProject);
@@ -52,7 +52,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetWITypesCommand = new DelegateCommand(() =>
             {
-                var currentTeamProject = CurrentTeamProject;
+                TeamProjectInfo currentTeamProject = CurrentTeamProject;
                 GetWITypes(currentTeamProject);
             },
             () => (CurrentProjectCollection != null && CurrentTeamProject != null));
@@ -246,8 +246,8 @@ namespace TfsWitAdminTools.ViewModel
 
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
-            var projectCollectionName = CurrentProjectCollection.Name;
-            var teamProjectName = teamProject.Name;
+            string projectCollectionName = CurrentProjectCollection.Name;
+            string teamProjectName = teamProject.Name;
             var workItemTypeInfos =
                 (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                 .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })

@@ -10,9 +10,9 @@ namespace TfsWitAdminTools.ViewModel
         {
             RenameCommand = new DelegateCommand(() =>
             {
-                var projectCollectionName = Server.CurrentProjectCollection.Name;
-                var teamProjectName = Server.CurrentTeamProject.Name;
-                var workItemTypeName = Server.CurrentWorkItemType.Name;
+                string projectCollectionName = Server.CurrentProjectCollection.Name;
+                string teamProjectName = Server.CurrentTeamProject.Name;
+                string workItemTypeName = Server.CurrentWorkItemType.Name;
 
                 Server.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
                     NewName);

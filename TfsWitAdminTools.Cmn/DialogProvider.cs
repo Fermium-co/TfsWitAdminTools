@@ -21,10 +21,10 @@ namespace TfsWitAdminTools.Cmn
 
         public string OpenFileDialog(bool IsFolderPicker)
         {
-            var fileName = string.Empty;
+            string fileName = string.Empty;
             var dialog = new CommonOpenFileDialog();
             dialog.IsFolderPicker = IsFolderPicker;
-            var dialogResult = dialog.ShowDialog();
+            CommonFileDialogResult dialogResult = dialog.ShowDialog();
             if (dialogResult == CommonFileDialogResult.Ok)
                 fileName = dialog.FileName;
 

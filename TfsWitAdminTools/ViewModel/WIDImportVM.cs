@@ -7,12 +7,16 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDImportVM(ToolsVM server)
+        public WIDImportVM(ToolsVM server, IDialogProvider dialogProvider)
             : base(server)
         {
+            this._dialogProvider = dialogProvider;
+
+            #region Commands
+
             BrowseCommand = new DelegateCommand(() =>
             {
-                var fileName =  DiManager.Current.Resolve<IDialogProvider>().OpenFileDialog();
+                string fileName = _dialogProvider.OpenFileDialog();
                 FileName = fileName;
             });
 
@@ -35,6 +39,8 @@ namespace TfsWitAdminTools.ViewModel
                 !string.IsNullOrEmpty(FileName)
                 )
             );
+
+            #endregion
         }
 
         #endregion
@@ -54,12 +60,18 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
+        #region Fields
+
+        private IDialogProvider _dialogProvider;
+
+        #endregion
+
         #region Methods
 
         private void Import()
         {
-            var projectCollectionName = Server.CurrentProjectCollection.Name;
-            var teamProjectName = Server.CurrentTeamProject.Name;
+            string projectCollectionName = Server.CurrentProjectCollection.Name;
+            string teamProjectName = Server.CurrentTeamProject.Name;
 
             Server.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,
                 teamProjectName, FileName);

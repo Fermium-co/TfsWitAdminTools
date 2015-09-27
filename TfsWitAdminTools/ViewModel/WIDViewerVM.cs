@@ -10,10 +10,10 @@ namespace TfsWitAdminTools.ViewModel
         {
             ShowCommand = new DelegateCommand(() =>
             {
-                var projectCollectionName = Server.CurrentProjectCollection.Name;
-                var teamProjectName = Server.CurrentTeamProject.Name;
-                var workItemTypeName = Server.CurrentWorkItemType.Name;
-                var workItemTypeDefenition = Server.WIAdminService
+                string projectCollectionName = Server.CurrentProjectCollection.Name;
+                string teamProjectName = Server.CurrentTeamProject.Name;
+                string workItemTypeName = Server.CurrentWorkItemType.Name;
+                string workItemTypeDefenition = Server.WIAdminService
                     .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
 
                 Server.CurrentWorkItemType.Defenition = workItemTypeDefenition;

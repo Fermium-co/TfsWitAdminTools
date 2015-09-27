@@ -1,4 +1,5 @@
 ﻿using Castle.MicroKernel.Registration;
+using Microsoft.TeamFoundation.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -39,7 +40,7 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<WIDRenameVM, WIDRenameVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryViewerVM, CategoryViewerVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryExportVM, CategoryExportVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);                
         }
     }
 }
