@@ -20,12 +20,14 @@ namespace TfsWitAdminTools.Cmn
         public string TfsAddress { get; private set; }
 
         public Dictionary<string, TfsTeamProjectCollection> ProjectCollections { get; private set; }
+
         public Dictionary<string, ProjectInfo[]> TeamProjects { get; private set; }
 
         public WorkItemStore WorkItemStore { get; set; }
         public ICommonStructureService4 CommonStructureService4 { get; set; }
 
         public Dictionary<short, TeamFoundationIdentity> UserIdentities;
+
         public Dictionary<short, string> ProjectWorkSpaces;
 
         public VersionControlServer VersionControlServer { get; set; }

@@ -26,7 +26,7 @@ namespace TfsWitAdminTools.ViewModel
             }
         }
 
-        public TFManager TFManager
+        public ITFManager TFManager
         {
             get
             {

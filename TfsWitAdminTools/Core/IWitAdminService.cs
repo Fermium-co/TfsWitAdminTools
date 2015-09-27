@@ -8,22 +8,22 @@ namespace TfsWitAdminTools.Core
 {
     public interface IWitAdminService
     {
-        Task<string[]> ExportWorkItemTypes(TFManager tfManager, string projectCollectionName, string teamProjectName);
+        Task<string[]> ExportWorkItemTypes(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
-        string ExportWorkItemDefenition(TFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
+        string ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
 
-        void ExportWorkItemDefenition(TFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName,
+        void ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName,
             string fileName);
 
-        void ImportWorkItemDefenition(TFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        void ImportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        string RenameWorkItem(TFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
+        string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
 
-        string ExportCategories(TFManager tfManager, string projectCollectionName, string teamProjectName);
+        string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
-        void ExportCategories(TFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        void ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        void ImportCategories(TFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
         string InvokeCommand(string argument);
 
