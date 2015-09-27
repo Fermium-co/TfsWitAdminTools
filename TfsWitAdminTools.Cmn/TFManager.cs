@@ -99,7 +99,7 @@ namespace TfsWitAdminTools.Cmn
 
                 #endregion
 
-                if (ProjectCollections.Count() == 0)
+                if (!ProjectCollections.Any())
                 {
                     string exceptionMessage = string.Format("Tfs team project collection with \"{0}\" name not found", nodeCollectionName);
                     string projectCollectionsText = "projectCollections : \n" +

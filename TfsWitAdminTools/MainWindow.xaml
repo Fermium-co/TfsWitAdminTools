@@ -3,5 +3,5 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:iuc="clr-namespace:TfsWitAdminTools.UserControls"
         Title="MainWindow" Height="500" Width="800" WindowState="Maximized">
-    <iuc:MainForm />
+    <iuc:MainForm/>
 </Window>
