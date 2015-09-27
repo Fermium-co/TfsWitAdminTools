@@ -29,7 +29,7 @@ namespace TfsWitAdminTools.Core
 
         Task<string[]> InvokeCommandWithSplitedResult(string argument);
 
-        Process CreateProcess(string argument);
+        IProcessService CreateProcess(string argument);
 
         event EventHandler<CommandInvokedEventArgs> CommandInvoked;
     }

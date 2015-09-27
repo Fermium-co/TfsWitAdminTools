@@ -45,6 +45,12 @@ namespace TfsWitAdminTools.Core
 
         }
 
+        public void Register<TService>(TService @object)
+            where TService : class
+        {
+            _Container.Register(Component.For<TService>().UsingFactoryMethod(() => @object));
+        }
+
         public void Init()
         {
             _Container = new WindsorContainer();

@@ -79,14 +79,14 @@ namespace TfsWitAdminTools.Service
 
         #region CoreMethods
 
-        public string InvokeCommand(string argument)
+        public virtual string InvokeCommand(string argument)
         {
-            Process process = CreateProcess(argument);
+            IProcessService process = CreateProcess(argument);
 
             process.Start();
             //process.WaitForExit();
 
-            string result = process.StandardOutput.ReadToEnd();
+            string result = process.ReadToEnd();
 
             CommandInvokedEventArgs eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
@@ -100,38 +100,23 @@ namespace TfsWitAdminTools.Service
         {
             return Task.Factory.StartNew<string[]>(() =>
             {
-                Process process = CreateProcess(argument);
+                IProcessService process = CreateProcess(argument);
                 process.Start();
                 process.WaitForExit();
 
                 List<String> result = new List<string>();
-                while (!process.StandardOutput.EndOfStream)
+                while (!process.IsEndOfStream())
                 {
-                    result.Add(process.StandardOutput.ReadLine());
+                    result.Add(process.ReadLine());
                 }
 
                 return result.ToArray();
             });
         }
 
-        public Process CreateProcess(string argument)
+        public virtual IProcessService CreateProcess(string argument)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo()
-            {
-                FileName = _configProvider.GetConfig("witAdminExecutableAddress"),
-                Arguments = argument,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            Process process = new Process()
-            {
-                StartInfo = startInfo
-            };
-
-            return process;
+            return DiManager.Current.Resolve<IProcessService>(new { argument = argument });
         }
 
         #endregion
