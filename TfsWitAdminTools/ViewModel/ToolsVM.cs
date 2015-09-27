@@ -228,8 +228,8 @@ namespace TfsWitAdminTools.ViewModel
 
         private List<ProjectCollectionInfo> GetProjectCollectionInfos(TFManager tfManager)
         {
-            var projectCollections = tfManager.projectCollections;
-            var teamProjects = tfManager.teamProjects;
+            var projectCollections = tfManager.ProjectCollections;
+            var teamProjects = tfManager.TeamProjects;
             var projectCollectionInfos = new List<ProjectCollectionInfo>();
             foreach (var projectCollection in projectCollections)
             {

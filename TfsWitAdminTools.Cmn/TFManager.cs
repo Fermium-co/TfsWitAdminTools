@@ -19,8 +19,8 @@ namespace TfsWitAdminTools.Cmn
     {
         public string TfsAddress { get; private set; }
 
-        public Dictionary<string, TfsTeamProjectCollection> projectCollections;
-        public Dictionary<string, ProjectInfo[]> teamProjects;
+        public Dictionary<string, TfsTeamProjectCollection> ProjectCollections { get; private set; }
+        public Dictionary<string, ProjectInfo[]> TeamProjects { get; private set; }
 
         public WorkItemStore WorkItemStore { get; set; }
         public ICommonStructureService4 CommonStructureService4 { get; set; }
@@ -54,8 +54,8 @@ namespace TfsWitAdminTools.Cmn
                 new[] { CatalogResourceTypes.ProjectCollection },
                 false, CatalogQueryOptions.None);
 
-            projectCollections = new Dictionary<string, TfsTeamProjectCollection>();
-            teamProjects = new Dictionary<string, ProjectInfo[]>();
+            ProjectCollections = new Dictionary<string, TfsTeamProjectCollection>();
+            TeamProjects = new Dictionary<string, ProjectInfo[]>();
 
             foreach (CatalogNode collectionNode in collectionNodes)
             {
@@ -76,18 +76,18 @@ namespace TfsWitAdminTools.Cmn
                 //var impersonatedTeamProjectCollection = new TfsTeamProjectCollection(teamProjectCollection.Uri, identity.Descriptor);
                 //teamProjectCollection = impersonatedTeamProjectCollection;
 
-                projectCollections.Add(nodeCollectionName, projectCollection);
+                ProjectCollections.Add(nodeCollectionName, projectCollection);
 
                 //ReadOnlyCollection<CatalogNode> teamProjectNodes = teamProjectCollection.CatalogNode.QueryChildren(
                 //    new Guid[] { CatalogResourceTypes.TeamProject },
                 //    false, CatalogQueryOptions.None
                 //    );
-                
+
 
                 // Retrieve team projects
                 var css4 = projectCollection.GetService<ICommonStructureService4>();
                 var projectInfos = css4.ListAllProjects();
-                teamProjects.Add(nodeCollectionName, projectInfos);
+                TeamProjects.Add(nodeCollectionName, projectInfos);
 
 
                 //if (nodeCollectionName == collectionName)
@@ -142,11 +142,11 @@ namespace TfsWitAdminTools.Cmn
                 #endregion
                 //}
 
-                if (projectCollections.Count() == 0)
+                if (ProjectCollections.Count() == 0)
                 {
                     var exceptionMessage = string.Format("Tfs team project collection with \"{0}\" name not found", nodeCollectionName);
                     var projectCollectionsText = "projectCollections : \n" +
-                        projectCollections.Keys.Aggregate((str, next) => str = str + Environment.NewLine + next);
+                        ProjectCollections.Keys.Aggregate((str, next) => str = str + Environment.NewLine + next);
                     var logText = string.Format("{0}\n\n{1}", exceptionMessage, projectCollectionsText);
                     throw new Exception(exceptionMessage);
                 }
