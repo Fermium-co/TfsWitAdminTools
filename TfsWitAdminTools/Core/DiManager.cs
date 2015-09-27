@@ -15,25 +15,40 @@ namespace TfsWitAdminTools.Core
 
         public static readonly DiManager Current = new DiManager();
 
-        public void Register<TContract, TService>(LifeCycle lifeCycle)
+        public void Register<TContract, TService>(LifeCycle lifeCycle, Func<TContract> factoryMethod = null)
             where TContract : class
             where TService : TContract
         {
+            ComponentRegistration<TContract> component = Component.For<TContract>().ImplementedBy<TService>();
+
             switch (lifeCycle)
             {
                 case LifeCycle.Transient:
-                    _Container.Register(Component.For<TContract>().ImplementedBy<TService>().LifestyleTransient());
+                    component = component.LifestyleTransient();
                     break;
                 case LifeCycle.Singletone:
-                    _Container.Register(Component.For<TContract>().ImplementedBy<TService>().LifestyleSingleton());
+                    component = component.LifestyleSingleton();
                     break;
                 case LifeCycle.PerThread:
-                    _Container.Register(Component.For<TContract>().ImplementedBy<TService>().LifestylePerThread());
+                    component = component.LifestylePerThread();
                     break;
                 default:
                     throw new NotSupportedException("Lifecycle");
             }
 
+            if (factoryMethod != null)
+            {
+                component = component.UsingFactoryMethod(factoryMethod, managedExternally: true);
+            }
+
+            _Container.Register(component);
+
+        }
+
+        public void Register<TService>(TService @object)
+            where TService : class
+        {
+            _Container.Register(Component.For<TService>().UsingFactoryMethod(() => @object));
         }
 
         public void Init()

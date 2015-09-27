@@ -27,7 +27,7 @@ namespace TfsWitAdminTools.ViewModel
 
             SetAddressCommand = new DelegateCommand(() =>
             {
-                TFManager = DiManager.Current.Resolve<TFManager>(new { serverAddress = Address });
+                TFManager = DiManager.Current.Resolve<ITFManager>(new { serverAddress = Address });
                 GetProjectCollectionInfosCommand.Execute(this);
                 InitChildViewModelsCommand.Execute(this);
             },
@@ -43,7 +43,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetAllTeamProjectsWITypesCommand = new DelegateCommand(() =>
             {
-                var teamProjects = CurrentProjectCollection.TeamProjectInfos;
+                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
                 foreach (var teamProject in teamProjects)
                 {
                     GetWITypes(teamProject);
@@ -52,7 +52,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetWITypesCommand = new DelegateCommand(() =>
             {
-                var currentTeamProject = CurrentTeamProject;
+                TeamProjectInfo currentTeamProject = CurrentTeamProject;
                 GetWITypes(currentTeamProject);
             },
             () => (CurrentProjectCollection != null && CurrentTeamProject != null));
@@ -220,16 +220,16 @@ namespace TfsWitAdminTools.ViewModel
 
         public IWitAdminService WIAdminService { get; set; }
 
-        public TFManager TFManager { get; set; }
+        public ITFManager TFManager { get; set; }
 
         #endregion
 
         #region Methods
 
-        private List<ProjectCollectionInfo> GetProjectCollectionInfos(TFManager tfManager)
+        private List<ProjectCollectionInfo> GetProjectCollectionInfos(ITFManager tfManager)
         {
-            var projectCollections = tfManager.projectCollections;
-            var teamProjects = tfManager.teamProjects;
+            var projectCollections = tfManager.ProjectCollections;
+            var teamProjects = tfManager.TeamProjects;
             var projectCollectionInfos = new List<ProjectCollectionInfo>();
             foreach (var projectCollection in projectCollections)
             {
@@ -246,8 +246,8 @@ namespace TfsWitAdminTools.ViewModel
 
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
-            var projectCollectionName = CurrentProjectCollection.Name;
-            var teamProjectName = teamProject.Name;
+            string projectCollectionName = CurrentProjectCollection.Name;
+            string teamProjectName = teamProject.Name;
             var workItemTypeInfos =
                 (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                 .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })

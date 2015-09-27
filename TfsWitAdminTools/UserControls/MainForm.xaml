@@ -11,24 +11,24 @@
              DataContext="{Binding Source={StaticResource Locator}, Path=MainVM}">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0">First Server</Label>
-            <localUserControl:ServerForm Grid.Row="1" DataContext="{Binding FirstServer}" />
+            <Label Grid.Row="0" Content="First Server"/>
+            <localUserControl:ServerForm Grid.Row="1" DataContext="{Binding FirstServer}"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0">Second Server</Label>
-            <localUserControl:ServerForm DataContext="{Binding SecondServer}" Grid.Row="1" />
+            <Label Grid.Row="0" Content="Second Server"/>
+            <localUserControl:ServerForm DataContext="{Binding SecondServer}" Grid.Row="1"/>
         </Grid>
     </Grid>
 </UserControl>

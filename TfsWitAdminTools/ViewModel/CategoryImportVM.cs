@@ -1,4 +1,5 @@
 ﻿using TfsWitAdminTools.Cmn;
+using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.ViewModel
 {
@@ -6,19 +7,21 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public CategoryImportVM(ToolsVM server)
+        public CategoryImportVM(ToolsVM server, IDialogProvider dialogProvider)
             : base(server)
         {
+            this._dialogProvider = dialogProvider;
+
             BrowseCommand = new DelegateCommand(() =>
             {
-                var fileName = DialogTools.OpenFileDialog();
+                string fileName = _dialogProvider.OpenFileDialog();
                 FileName = fileName;
             });
 
             ImportCommand = new DelegateCommand(() =>
             {
-                var projectCollectionName = Server.CurrentProjectCollection.Name;
-                var teamProjectName = Server.CurrentTeamProject.Name;
+                string projectCollectionName = Server.CurrentProjectCollection.Name;
+                string teamProjectName = Server.CurrentTeamProject.Name;
 
                 Server.WIAdminService.ImportCategories(TFManager, projectCollectionName, teamProjectName, FileName);
             },
@@ -45,6 +48,13 @@ namespace TfsWitAdminTools.ViewModel
         }
 
         #endregion
+
+        #region Fields
+
+        private IDialogProvider _dialogProvider;
+
+        #endregion
+
 
         #region Commands
 

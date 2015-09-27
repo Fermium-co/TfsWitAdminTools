@@ -1,4 +1,5 @@
 ﻿using TfsWitAdminTools.Cmn;
+using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
 
 namespace TfsWitAdminTools.ViewModel
@@ -7,14 +8,16 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDExportVM(ToolsVM server)
+        public WIDExportVM(ToolsVM server, IDialogProvider dialogProvider)
             : base(server)
         {
+            this._dialogProvider = dialogProvider;
+
             #region Commands
 
             BrowseCommand = new DelegateCommand(() =>
             {
-                var path = DialogTools.OpenBrowseDialog();
+                string path = _dialogProvider.OpenBrowseDialog();
                 Path = path;
             });
 
@@ -75,11 +78,17 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
+        #region Fields
+
+        private IDialogProvider _dialogProvider;
+
+        #endregion
+
         #region Methods
 
         private void Export()
         {
-            var projectCollection = Server.CurrentProjectCollection;
+            ProjectCollectionInfo projectCollection = Server.CurrentProjectCollection;
 
             TeamProjectInfo[] teamProjects;
 
@@ -91,7 +100,7 @@ namespace TfsWitAdminTools.ViewModel
             else
                 teamProjects = new TeamProjectInfo[] { Server.CurrentTeamProject };
 
-            foreach (var teamProject in teamProjects)
+            foreach (TeamProjectInfo teamProject in teamProjects)
             {
                 WorkItemTypeInfo[] workItemTypeInfos;
                 string path = Path;
@@ -104,19 +113,19 @@ namespace TfsWitAdminTools.ViewModel
                 else
                     workItemTypeInfos = new WorkItemTypeInfo[] { Server.CurrentWorkItemType };
 
-                foreach (var workItemTypeInfo in workItemTypeInfos)
+                foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
                     Export(projectCollection, teamProject, workItemTypeInfo, path);
             }
         }
 
         private void Export(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, WorkItemTypeInfo workItemType, string path)
         {
-            var projectCollectionName = projectCollection.Name;
-            var teamProjectName = teamProject.Name;
-            var workItemTypeName = workItemType.Name;
+            string projectCollectionName = projectCollection.Name;
+            string teamProjectName = teamProject.Name;
+            string workItemTypeName = workItemType.Name;
 
-            var fileName = string.Format("{0}.xml", workItemTypeName);
-            var fullPath = path = System.IO.Path.Combine(path, fileName);
+            string fileName = string.Format("{0}.xml", workItemTypeName);
+            string fullPath = path = System.IO.Path.Combine(path, fileName);
 
             Server.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                 workItemTypeName, fullPath);

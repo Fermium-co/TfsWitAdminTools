@@ -9,7 +9,7 @@ namespace TfsWitAdminTools.ViewModel
         public MainVM(ITfsServerService tfServerService, IWitAdminService wiAdminService, ToolsVM firstServer, ToolsVM secondServer)
         {
             this.FirstServer = firstServer;
-            var firstServerUrl = tfServerService.GetFirstServerUrl();
+            string firstServerUrl = tfServerService.GetFirstServerUrl();
             this.FirstServer.Address = firstServerUrl;
             this.SecondServer = secondServer;
         }

@@ -8,36 +8,35 @@
              d:DesignHeight="800" d:DesignWidth="330">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*" Name="grwFirstServerMain"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="6*" Name="grwFirstServerMain"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Expander Name="expFirstServer" Grid.Row="0" IsExpanded="True" Expanded="expFirstServer_Expanded" Collapsed="expFirstServer_Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="165"></RowDefinition>
-                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="165"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
-                    <Label>Address</Label>
-                    <TextBox Text="{Binding Address}" TextChanged="TextBox_TextChanged" />
-                    <Button Command="{Binding SetAddressCommand}" Content="Change Server"></Button>
-                    <ComboBox ItemsSource="{Binding Path=ProjectCollectionInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentProjectCollection}" />
+                    <Label Content="Address"/>
+                    <TextBox Text="{Binding Address}" TextChanged="TextBox_TextChanged"/>
+                    <Button Command="{Binding SetAddressCommand}" Content="Change Server"/>
+                    <ComboBox ItemsSource="{Binding Path=ProjectCollectionInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentProjectCollection}"/>
                     <ComboBox ItemsSource="{Binding Path=CurrentProjectCollection.TeamProjectInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentTeamProject}"/>
                     <Button Command="{Binding Path=GetAllTeamProjectsWITypesCommand}" Content="Show All Team Projects Work Item Types"/>
                     <Button Command="{Binding Path=GetWITypesCommand}" Content="Show Work Item Types"/>
                 </StackPanel>
                 <Grid  Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" Name="grwFirstServerWITypes"></RowDefinition>
-                        <RowDefinition Height="*" Name="grwFirstServerWIDef"></RowDefinition>
+                        <RowDefinition Height="*" Name="grwFirstServerWITypes"/>
+                        <RowDefinition Height="*" Name="grwFirstServerWIDef"/>
                     </Grid.RowDefinitions>
-                    <Expander Name="expFirstServerWITypes" Grid.Row="0" IsExpanded="True" Expanded="expFirstServerWITypes_Expanded" Collapsed="expFirstServerWITypes_Collapsed" >
+                    <Expander Name="expFirstServerWITypes" Grid.Row="0" IsExpanded="True" Expanded="expFirstServerWITypes_Expanded" Collapsed="expFirstServerWITypes_Collapsed">
                         <TabControl>
                             <TabItem Header="Work Item Types">
                                 <StackPanel>
                                     <ListBox ItemsSource="{Binding Path=CurrentTeamProject.WorkItemTypeInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentWorkItemType}" 
-                                             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
-                                    </ListBox>
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
                                 </StackPanel>
                             </TabItem>
                         </TabControl>
@@ -48,37 +47,36 @@
                                 <TabItem Header="View" DataContext="{Binding Path=WIDViewer}">
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
-                                        <Button Grid.Row="0" Name="btnShow" Command="{Binding ShowCommand}">Show</Button>
+                                        <Button Grid.Row="0" Name="btnShow" Command="{Binding ShowCommand}" Content="Show"/>
                                         <localUserControl:TextEditorEx x:Name="txtWIDefenition" Grid.Row="1" 
-                                                    DocumentText="{Binding Path=Server.CurrentWorkItemType.Defenition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                        </localUserControl:TextEditorEx>
+                                                    DocumentText="{Binding Path=Server.CurrentWorkItemType.Defenition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="Export" DataContext="{Binding Path=WIDExport}">
                                     <StackPanel>
-                                        <Label Content="Path"></Label>
-                                        <TextBox Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                        <Button Command="{Binding BrowseCommand}" Content="Browse"></Button>
-                                        <CheckBox IsChecked="{Binding IsAllTeamProjects, Mode=TwoWay}" Content="All Team Projects"></CheckBox>
-                                        <CheckBox IsChecked="{Binding IsAllWorkItemTypes}" Content="All Work Item Types"></CheckBox>
-                                        <Button Command="{Binding ExportCommand}" Content="Export"></Button>
+                                        <Label Content="Path"/>
+                                        <TextBox Text="{Binding Path=Path, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Command="{Binding BrowseCommand}" Content="Browse"/>
+                                        <CheckBox IsChecked="{Binding IsAllTeamProjects, Mode=TwoWay}" Content="All Team Projects"/>
+                                        <CheckBox IsChecked="{Binding IsAllWorkItemTypes}" Content="All Work Item Types"/>
+                                        <Button Command="{Binding ExportCommand}" Content="Export"/>
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem Header="Import" DataContext="{Binding Path=WIDImport}">
                                     <StackPanel>
-                                        <Label Content="File Name"></Label>
-                                        <TextBox Text="{Binding Path=FileName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                        <Button Command="{Binding BrowseCommand}" Content="Browse"></Button>
-                                        <Button Command="{Binding ImportCommand}" Content="Import"></Button>
+                                        <Label Content="File Name"/>
+                                        <TextBox Text="{Binding Path=FileName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Command="{Binding BrowseCommand}" Content="Browse"/>
+                                        <Button Command="{Binding ImportCommand}" Content="Import"/>
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem Header="Rename Work Item" DataContext="{Binding Path=WIDRename}">
                                     <StackPanel>
-                                        <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}" ></TextBox>
-                                        <Button Command="{Binding RenameCommand}" Content="Rename"></Button>
+                                        <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Command="{Binding RenameCommand}" Content="Rename"/>
                                     </StackPanel>
                                 </TabItem>
                             </TabControl>
@@ -88,31 +86,30 @@
                                 <TabItem Header="View" DataContext="{Binding CategoryViewer}">
                                     <Grid>
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="auto"></RowDefinition>
-                                            <RowDefinition Height="*"></RowDefinition>
+                                            <RowDefinition Height="auto"/>
+                                            <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
                                         <Button Grid.Row="0" Command="{Binding Path=ShowCommand}">Show</Button>
                                         <localUserControl:TextEditorEx x:Name="txtCategories" Grid.Row="1" 
-                                                    DocumentText="{Binding Path=Server.CurrentTeamProject.Categories}">
-                                        </localUserControl:TextEditorEx>
+                                                    DocumentText="{Binding Path=Server.CurrentTeamProject.Categories}"/>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="Export">
                                     <StackPanel>
-                                        <Label Content="Path"></Label>
-                                        <TextBox Text="{Binding Path=CategoryExport.Path}"></TextBox>
-                                        <Label Content="FileName"></Label>
-                                        <TextBox Text="{Binding Path=CategoryExport.FileName}"></TextBox>
-                                        <Button Command="{Binding Path=CategoryExport.BrowseCommand}" Content="Browse"></Button>
-                                        <Button Command="{Binding Path=CategoryExport.ExportCommand}" Content="Export"></Button>
+                                        <Label Content="Path"/>
+                                        <TextBox Text="{Binding Path=CategoryExport.Path}"/>
+                                        <Label Content="FileName"/>
+                                        <TextBox Text="{Binding Path=CategoryExport.FileName}"/>
+                                        <Button Command="{Binding Path=CategoryExport.BrowseCommand}" Content="Browse"/>
+                                        <Button Command="{Binding Path=CategoryExport.ExportCommand}" Content="Export"/>
                                     </StackPanel>
                                 </TabItem>
                                 <TabItem Header="Import">
                                     <StackPanel>
-                                        <Label Content="File Name"></Label>
-                                        <TextBox Text="{Binding Path=FileName, UpdateSourceTrigger=PropertyChanged}"></TextBox>
-                                        <Button Command="{Binding Path=CategoryImport.BrowseCommand}" Content="Browse"></Button>
-                                        <Button Command="{Binding Path=CategoryImport.ImportCommand}" Content="Import"></Button>
+                                        <Label Content="File Name"/>
+                                        <TextBox Text="{Binding Path=FileName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <Button Command="{Binding Path=CategoryImport.BrowseCommand}" Content="Browse"/>
+                                        <Button Command="{Binding Path=CategoryImport.ImportCommand}" Content="Import"/>
                                     </StackPanel>
                                 </TabItem>
                             </TabControl>
@@ -123,12 +120,12 @@
         </Expander>
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="40"></ColumnDefinition>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="40"/>
             </Grid.ColumnDefinitions>
             <TextBox Grid.Column="0" Name="txtOutput" TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding Output}" 
-                     ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtOutput_TextChanged"></TextBox>
-            <Button Grid.Column="1" Content="Clear" Command="{Binding ClearOutputCommand}"></Button>
+                     ScrollViewer.VerticalScrollBarVisibility="Auto" TextChanged="txtOutput_TextChanged"/>
+            <Button Grid.Column="1" Content="Clear" Command="{Binding ClearOutputCommand}"/>
         </Grid>
     </Grid>
 </UserControl>

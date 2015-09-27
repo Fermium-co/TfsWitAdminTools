@@ -1,4 +1,5 @@
 ﻿using Castle.MicroKernel.Registration;
+using Microsoft.TeamFoundation.Client;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -26,8 +27,9 @@ namespace TfsWitAdminTools
         private void Application_Startup(object sender, StartupEventArgs e)
         {
             DiManager.Current.Init();
-            DiManager.Current.Register<TFManager, TFManager>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ITFManager, TFManager>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<IConfigProvider, DefaultConfigProvider>(lifeCycle: LifeCycle.Singletone);
+            DiManager.Current.Register<IDialogProvider, DialogProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<ITfsServerService, TFServerService>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<MainVM, MainVM>(lifeCycle: LifeCycle.Singletone);
@@ -38,7 +40,7 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<WIDRenameVM, WIDRenameVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryViewerVM, CategoryViewerVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryExportVM, CategoryExportVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);                
         }
     }
 }
