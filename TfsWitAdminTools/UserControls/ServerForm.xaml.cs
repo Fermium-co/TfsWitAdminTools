@@ -44,10 +44,5 @@ namespace TfsWitAdminTools.UserControls
         {
             txtOutput.ScrollToEnd();
         }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
     }
 }
