@@ -116,7 +116,8 @@ namespace TfsWitAdminTools.Service
 
         public virtual IProcessService CreateProcess(string argument)
         {
-            return DiManager.Current.Resolve<IProcessService>(new { argument = argument });
+            var p = DiManager.Current.Resolve<IProcessService>(new { argument = argument });
+            return p;
         }
 
         #endregion

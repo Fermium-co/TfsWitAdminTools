@@ -6,37 +6,38 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public MainVM(ITfsServerService tfServerService, IWitAdminService wiAdminService, ToolsVM firstServer, ToolsVM secondServer)
+        public MainVM(ITfsServerService tfServerService, IWitAdminService wiAdminService, ToolsVM firstTools, ToolsVM secondTools)
         {
-            this.FirstServer = firstServer;
-            string firstServerUrl = tfServerService.GetFirstServerUrl();
-            this.FirstServer.Address = firstServerUrl;
-            this.SecondServer = secondServer;
+            this.FirstTools = firstTools;
+            string firstToolsUrl = tfServerService.GetFirstServerUrl();
+            this.FirstTools.Address = firstToolsUrl;
+            this.FirstTools.SetAddressCommand.Execute(this);
+            this.SecondTools = secondTools;
         }
 
         #endregion
 
         #region Props
 
-        private ToolsVM _firstServer;
+        private ToolsVM _firstTools;
 
-        public ToolsVM FirstServer
+        public ToolsVM FirstTools
         {
-            get { return _firstServer; }
+            get { return _firstTools; }
             private set
             {
-                Set(ref _firstServer, value);
+                Set(ref _firstTools, value);
             }
         }
 
-        private ToolsVM _secondServer;
+        private ToolsVM _secondTools;
 
-        public ToolsVM SecondServer
+        public ToolsVM SecondTools
         {
-            get { return _secondServer; }
+            get { return _secondTools; }
             private set
             {
-                Set(ref _secondServer, value);
+                Set(ref _secondTools, value);
             }
         }
 

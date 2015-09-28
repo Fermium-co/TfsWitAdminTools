@@ -34,6 +34,12 @@ namespace TfsWitAdminTools.ViewModel
             () => !string.IsNullOrEmpty(Address)
             );
 
+            ResetTFManagerCommand = new DelegateCommand(() =>
+            {
+                TFManager = null;
+                ProjectCollectionInfos = null;
+            });
+
             GetProjectCollectionInfosCommand = new DelegateCommand(() =>
             {
                 ProjectCollectionInfos = GetProjectCollectionInfos(TFManager);
@@ -99,7 +105,8 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _address, value))
                 {
-                    SetAddressCommand.Execute(this);
+                    //SetAddressCommand.Execute(this);
+                    ResetTFManagerCommand.Execute(this);
                     RaiseCommandsCanExecute();
                 }
             }
@@ -200,19 +207,103 @@ namespace TfsWitAdminTools.ViewModel
 
         #region View Models
 
-        public WIDViewerVM WIDViewer { get; set; }
+        private WIDViewerVM _wiDViewer;
 
-        public WIDExportVM WIDExport { get; set; }
+        public WIDViewerVM WIDViewer
+        {
+            get { return _wiDViewer; }
+            set
+            {
+                if (Set(ref _wiDViewer, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
 
-        public WIDImportVM WIDImport { get; set; }
+        private WIDExportVM _wiDExport;
 
-        public WIDRenameVM WIDRename { get; set; }
+        public WIDExportVM WIDExport
+        {
+            get { return _wiDExport; }
+            set
+            {
+                if (Set(ref _wiDExport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
 
-        public CategoryViewerVM CategoryViewer { get; set; }
+        private WIDImportVM _wiDImport;
 
-        public CategoryExportVM CategoryExport { get; set; }
+        public WIDImportVM WIDImport
+        {
+            get { return _wiDImport; }
+            set
+            {
+                if (Set(ref _wiDImport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
 
-        public CategoryImportVM CategoryImport { get; set; }
+        private WIDRenameVM _wiDRename;
+
+        public WIDRenameVM WIDRename
+        {
+            get { return _wiDRename; }
+            set
+            {
+                if (Set(ref _wiDRename, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private CategoryViewerVM _categoryViewer;
+
+        public CategoryViewerVM CategoryViewer
+        {
+            get { return _categoryViewer; }
+            set
+            {
+                if (Set(ref _categoryViewer, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private CategoryExportVM _categoryExport;
+
+        public CategoryExportVM CategoryExport
+        {
+            get { return _categoryExport; }
+            set
+            {
+                if (Set(ref _categoryExport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private CategoryImportVM _categoryImport;
+
+        public CategoryImportVM CategoryImport
+        {
+            get { return _categoryImport; }
+            set
+            {
+                if (Set(ref _categoryImport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
 
         #endregion
 
@@ -262,6 +353,8 @@ namespace TfsWitAdminTools.ViewModel
 
         public DelegateCommand SetAddressCommand { get; set; }
 
+        public DelegateCommand ResetTFManagerCommand { get; set; }
+
         public DelegateCommand GetProjectCollectionInfosCommand { get; set; }
 
         public DelegateCommand GetAllTeamProjectsWITypesCommand { get; set; }
@@ -274,15 +367,23 @@ namespace TfsWitAdminTools.ViewModel
         {
             GetAllTeamProjectsWITypesCommand.RaiseCanExecuteChanged();
             GetWITypesCommand.RaiseCanExecuteChanged();
+            SetAddressCommand.RaiseCanExecuteChanged();
 
-            WIDViewer.ShowCommand.RaiseCanExecuteChanged();
-            WIDExport.ExportCommand.RaiseCanExecuteChanged();
-            WIDImport.ImportCommand.RaiseCanExecuteChanged();
-            WIDRename.RenameCommand.RaiseCanExecuteChanged();
+            if (WIDViewer != null)
+                WIDViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (WIDExport != null)
+                WIDExport.ExportCommand.RaiseCanExecuteChanged();
+            if (WIDImport != null)
+                WIDImport.ImportCommand.RaiseCanExecuteChanged();
+            if (WIDRename != null)
+                WIDRename.RenameCommand.RaiseCanExecuteChanged();
 
-            CategoryViewer.ShowCommand.RaiseCanExecuteChanged();
-            CategoryExport.ExportCommand.RaiseCanExecuteChanged();
-            CategoryImport.ImportCommand.RaiseCanExecuteChanged();
+            if (CategoryViewer != null)
+                CategoryViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (CategoryExport != null)
+                CategoryExport.ExportCommand.RaiseCanExecuteChanged();
+            if (CategoryImport != null)
+                CategoryImport.ImportCommand.RaiseCanExecuteChanged();
         }
 
         public DelegateCommand ClearOutputCommand { get; set; }

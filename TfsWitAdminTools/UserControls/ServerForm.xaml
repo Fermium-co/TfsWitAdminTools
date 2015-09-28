@@ -8,10 +8,10 @@
              d:DesignHeight="800" d:DesignWidth="330">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="6*" Name="grwFirstServerMain"/>
+            <RowDefinition Height="6*" Name="grwServer"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Expander Name="expFirstServer" Grid.Row="0" IsExpanded="True" Expanded="expFirstServer_Expanded" Collapsed="expFirstServer_Collapsed">
+        <Expander Name="expServer" Grid.Row="0" IsExpanded="True" Expanded="expServer_Expanded" Collapsed="expServer_Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="165"/>
@@ -19,7 +19,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
                     <Label Content="Address"/>
-                    <TextBox Text="{Binding Address}" TextChanged="TextBox_TextChanged"/>
+                    <TextBox Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"/>
                     <Button Command="{Binding SetAddressCommand}" Content="Change Server"/>
                     <ComboBox ItemsSource="{Binding Path=ProjectCollectionInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentProjectCollection}"/>
                     <ComboBox ItemsSource="{Binding Path=CurrentProjectCollection.TeamProjectInfos}" DisplayMemberPath="Name" SelectedItem="{Binding CurrentTeamProject}"/>
@@ -28,10 +28,10 @@
                 </StackPanel>
                 <Grid  Grid.Row="1">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" Name="grwFirstServerWITypes"/>
-                        <RowDefinition Height="*" Name="grwFirstServerWIDef"/>
+                        <RowDefinition Height="*" Name="grwWITypes"/>
+                        <RowDefinition Height="*" Name="grwWIDef"/>
                     </Grid.RowDefinitions>
-                    <Expander Name="expFirstServerWITypes" Grid.Row="0" IsExpanded="True" Expanded="expFirstServerWITypes_Expanded" Collapsed="expFirstServerWITypes_Collapsed">
+                    <Expander Name="expWITypes" Grid.Row="0" IsExpanded="True" Expanded="expWITypes_Expanded" Collapsed="expWITypes_Collapsed">
                         <TabControl>
                             <TabItem Header="Work Item Types">
                                 <StackPanel>
@@ -51,7 +51,7 @@
                                             <RowDefinition Height="*"/>
                                         </Grid.RowDefinitions>
                                         <Button Grid.Row="0" Name="btnShow" Command="{Binding ShowCommand}" Content="Show"/>
-                                        <localUserControl:TextEditorEx x:Name="txtWIDefenition" Grid.Row="1" 
+                                        <localUserControl:TextEditorEx x:Name="txtWIDefenition" Grid.Row="1"
                                                     DocumentText="{Binding Path=Server.CurrentWorkItemType.Defenition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                 </TabItem>

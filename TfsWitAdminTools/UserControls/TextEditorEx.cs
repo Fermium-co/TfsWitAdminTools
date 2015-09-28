@@ -10,13 +10,15 @@ namespace TfsWitAdminTools.UserControls
     {
         #region Syntax
 
-        private string _syntax;
+        public static readonly DependencyProperty SyntaxProperty =
+            DependencyProperty.Register("Syntax", typeof(string), typeof(TextEditorEx), new FrameworkPropertyMetadata(string.Empty));
+
         public string Syntax
         {
-            get { return _syntax; }
+            get { return (string)GetValue(SyntaxProperty); }
             set
             {
-                _syntax = value;
+                SetValue(SyntaxProperty, value);
                 SetFolding();
             }
         }
@@ -27,9 +29,9 @@ namespace TfsWitAdminTools.UserControls
 
         public void SetFolding()
         {
-            if (_syntax == "XML")
+            if (Syntax == "XML")
             {
-                SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(_syntax);
+                SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(Syntax);
                 _xmlFoldingStrategy = new XmlFoldingStrategy();
                 _foldingManager = FoldingManager.Install(TextArea);
                 UpdateFolding();
@@ -38,7 +40,7 @@ namespace TfsWitAdminTools.UserControls
 
         public void UpdateFolding()
         {
-            if (_syntax == "XML")
+            if (Syntax == "XML")
             {
                 _xmlFoldingStrategy.UpdateFoldings(_foldingManager, Document);
             }
@@ -82,10 +84,14 @@ namespace TfsWitAdminTools.UserControls
 
         #endregion
 
+        #region Syntax Name Consts
+
         public class SyntaxNames
         {
             public static readonly string XML = "XML";
         }
+
+        #endregion
     }
 }
 

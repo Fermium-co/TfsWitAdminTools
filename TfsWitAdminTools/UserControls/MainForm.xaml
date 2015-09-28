@@ -20,7 +20,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="First Server"/>
-            <localUserControl:ServerForm Grid.Row="1" DataContext="{Binding FirstServer}"/>
+            <localUserControl:ServerForm Grid.Row="1" DataContext="{Binding FirstTools}"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
@@ -28,7 +28,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Content="Second Server"/>
-            <localUserControl:ServerForm DataContext="{Binding SecondServer}" Grid.Row="1"/>
+            <localUserControl:ServerForm DataContext="{Binding SecondTools}" Grid.Row="1"/>
         </Grid>
     </Grid>
 </UserControl>
