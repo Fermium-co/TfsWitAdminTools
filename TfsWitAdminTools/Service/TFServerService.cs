@@ -14,8 +14,26 @@ namespace TfsWitAdminTools.Service
 
         public string GetFirstServerUrl()
         {
-            string mainServerUrl = _configProvider.GetConfig("TfsUrl");
-            return mainServerUrl;
+            string firstServerUrl = _configProvider.GetConfig(ConfigKeys.FirstTfsUrl);
+            return firstServerUrl;
+        }
+
+        public string GetSecondServerUrl()
+        {
+            string secondServerUrl = _configProvider.GetConfig(ConfigKeys.SecondTfsUrl);
+            return secondServerUrl;
+        }
+
+        public string GetConfigValue(string key)
+        {
+            string configValue = _configProvider.GetConfig(key);
+            return configValue;
+        }
+
+        public class ConfigKeys
+        {
+            public static readonly string FirstTfsUrl = "FirstTfsUrl";
+            public static readonly string SecondTfsUrl = "SecondTfsUrl";
         }
     }
 }

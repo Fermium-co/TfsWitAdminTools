@@ -15,7 +15,7 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Props
 
-        public ToolsVM _server;
+        private ToolsVM _server;
 
         public ToolsVM Server
         {

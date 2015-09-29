@@ -105,7 +105,6 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _address, value))
                 {
-                    //SetAddressCommand.Execute(this);
                     ResetTFManagerCommand.Execute(this);
                     RaiseCommandsCanExecute();
                 }
