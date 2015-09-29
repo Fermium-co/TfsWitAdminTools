@@ -12,7 +12,11 @@ namespace TfsWitAdminTools.ViewModel
             string firstToolsUrl = tfServerService.GetFirstServerUrl();
             this.FirstTools.Address = firstToolsUrl;
             this.FirstTools.SetAddressCommand.Execute(this);
+
             this.SecondTools = secondTools;
+            string secondToolsUrl = tfServerService.GetSecondServerUrl();
+            this.SecondTools.Address = secondToolsUrl;
+            this.SecondTools.SetAddressCommand.Execute(this);
         }
 
         #endregion
