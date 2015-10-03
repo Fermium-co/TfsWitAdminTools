@@ -98,8 +98,8 @@
     <Compile Include="UserControls\MainForm.xaml.cs">
       <DependentUpon>MainForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ServerForm.xaml.cs">
-      <DependentUpon>ServerForm.xaml</DependentUpon>
+    <Compile Include="UserControls\ToolsForm.xaml.cs">
+      <DependentUpon>ToolsForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\TextEditorEx.cs" />
     <Compile Include="ViewModel\CategoryExportVM.cs" />
@@ -134,7 +134,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\ServerForm.xaml">
+    <Page Include="UserControls\ToolsForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

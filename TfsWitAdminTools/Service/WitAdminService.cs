@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
@@ -96,22 +97,37 @@ namespace TfsWitAdminTools.Service
             return result;
         }
 
-        public Task<string[]> InvokeCommandWithSplitedResult(string argument)
+        public async Task<string[]> InvokeCommandWithSplitedResult(string argument)
         {
-            return Task.Factory.StartNew<string[]>(() =>
+            CommandInvokedEventArgs eventArg = null;
+
+            string[] results = await Task.Factory.StartNew<string[]>(() =>
             {
                 IProcessService process = CreateProcess(argument);
                 process.Start();
                 process.WaitForExit();
 
                 List<String> result = new List<string>();
+                StringBuilder resultText = new StringBuilder();
                 while (!process.IsEndOfStream())
                 {
-                    result.Add(process.ReadLine());
+                    var resultItem = process.ReadLine();
+
+                    result.Add(resultItem);
+
+                    resultText.AppendLine(resultItem);
                 }
+
+                eventArg = new CommandInvokedEventArgs();
+                eventArg.Argument = argument;
+                eventArg.Output = resultText.ToString();
 
                 return result.ToArray();
             });
+
+            OnCommandInvoked(eventArg);
+
+            return results;
         }
 
         public virtual IProcessService CreateProcess(string argument)

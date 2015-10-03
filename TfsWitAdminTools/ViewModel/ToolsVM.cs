@@ -168,14 +168,6 @@ namespace TfsWitAdminTools.ViewModel
 
         #region WorkItemType
 
-        private List<WorkItemTypeInfo> _workItemTypeInfos;
-
-        public List<WorkItemTypeInfo> WorkItemTypeInfos
-        {
-            get { return _workItemTypeInfos; }
-            set { Set(ref _workItemTypeInfos, value); }
-        }
-
         private WorkItemTypeInfo _currentWorkItemType;
 
         public WorkItemTypeInfo CurrentWorkItemType
@@ -197,7 +189,11 @@ namespace TfsWitAdminTools.ViewModel
         public string Output
         {
             get { return _output; }
-            set { Set(ref _output, value); }
+            set
+            {
+                if (Set(ref _output, value))
+                    ClearOutputCommand.RaiseCanExecuteChanged();
+            }
         }
 
         #endregion
@@ -367,6 +363,7 @@ namespace TfsWitAdminTools.ViewModel
             GetAllTeamProjectsWITypesCommand.RaiseCanExecuteChanged();
             GetWITypesCommand.RaiseCanExecuteChanged();
             SetAddressCommand.RaiseCanExecuteChanged();
+            ClearOutputCommand.RaiseCanExecuteChanged();
 
             if (WIDViewer != null)
                 WIDViewer.ShowCommand.RaiseCanExecuteChanged();
