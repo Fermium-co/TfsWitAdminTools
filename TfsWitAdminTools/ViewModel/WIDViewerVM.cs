@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 namespace TfsWitAdminTools.ViewModel
 {
     public class WIDViewerVM : ToolsChildVM
@@ -8,7 +9,7 @@ namespace TfsWitAdminTools.ViewModel
         public WIDViewerVM(ToolsVM server)
             : base(server)
         {
-            ShowCommand = new DelegateCommand(() =>
+            ShowCommand = new DelegateCommand(async () =>
             {
                 string projectCollectionName = Server.CurrentProjectCollection.Name;
                 string teamProjectName = Server.CurrentTeamProject.Name;

@@ -90,9 +90,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\IConfigProvider.cs" />
-    <Compile Include="Core\IProcessService.cs" />
-    <Compile Include="Service\DefaultConfigProvider.cs" />
-    <Compile Include="Service\DefaultProcessService.cs" />
+    <Compile Include="Core\IWitAdminProcessService.cs" />
+    <Compile Include="Service\ConfigProvider.cs" />
+    <Compile Include="Service\WitAdminProcessService.cs" />
     <Compile Include="Service\TFServerService.cs" />
     <Compile Include="Service\WitAdminService.cs" />
     <Compile Include="UserControls\MainForm.xaml.cs">

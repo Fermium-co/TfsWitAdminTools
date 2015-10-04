@@ -1,4 +1,5 @@
 ﻿
+using TfsWitAdminTools.Model;
 namespace TfsWitAdminTools.ViewModel
 {
     public class WIDRenameVM : ToolsChildVM
@@ -10,23 +11,50 @@ namespace TfsWitAdminTools.ViewModel
         {
             RenameCommand = new DelegateCommand(() =>
             {
+                Rename();
+            },
+            () => (
+                Server.CurrentProjectCollection != null &&
+                (IsAllTeamProjects == true || Server.CurrentTeamProject != null) &&
+                Server.CurrentWorkItemType != null &&
+                !string.IsNullOrEmpty(NewName)
+                )
+            );
+        }
+
+        private void Rename()
+        {
+            TeamProjectInfo[] teamProjects = null;
+            if (IsAllTeamProjects)
+                teamProjects = Server.CurrentProjectCollection.TeamProjectInfos;
+            else
+                teamProjects = new TeamProjectInfo[] { Server.CurrentTeamProject };
+
+            foreach (TeamProjectInfo teamProject in teamProjects)
+            {
                 string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
+                string teamProjectName = teamProject.Name;
                 string workItemTypeName = Server.CurrentWorkItemType.Name;
 
                 Server.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
                     NewName);
-            },
-            () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
-                Server.CurrentWorkItemType != null && !string.IsNullOrEmpty(NewName)
-                )
-            );
+            }
         }
 
         #endregion
 
         #region Props
+
+        private bool _isAllTeamProjects;
+        public bool IsAllTeamProjects
+        {
+            get { return _isAllTeamProjects; }
+            set
+            {
+                if (Set(ref _isAllTeamProjects, value))
+                    RenameCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         private string _newName;
         public string NewName

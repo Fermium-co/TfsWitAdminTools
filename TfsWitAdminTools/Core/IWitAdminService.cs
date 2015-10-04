@@ -25,11 +25,11 @@ namespace TfsWitAdminTools.Core
 
         void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        string InvokeCommand(string argument);
+        string InvokeCommand(string argument, bool isConfirmRequired = false);
 
-        Task<string[]> InvokeCommandWithSplitedResult(string argument);
+        Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false);
 
-        IProcessService CreateProcess(string argument);
+        IWitAdminProcessService CreateProcess(string argument, string[] confirmations);
 
         event EventHandler<CommandInvokedEventArgs> CommandInvoked;
     }

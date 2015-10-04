@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace TfsWitAdminTools.Core
 {
-    public interface IProcessService
+    public interface IWitAdminProcessService
     {
         void Start();
         void WaitForExit();

@@ -3,15 +3,18 @@ using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.Service
 {
-    public class DefaultProcessService : IProcessService
+    public class WitAdminProcessService : IWitAdminProcessService
     {
         private readonly Process _process;
+        private readonly string[] _confirmations;
+        public static readonly string WitAdminExecFileName = "witadmin.exe";
 
-        public DefaultProcessService(string argument, IConfigProvider configProvider)
+        public WitAdminProcessService(string argument, string[] confirmations, IConfigProvider configProvider)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = configProvider.GetConfig("witAdminExecutableAddress"),
+                FileName = WitAdminExecFileName,
+                WorkingDirectory = configProvider.GetConfig("witAdminExecutableAddress"),
                 Arguments = argument,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
@@ -45,6 +48,18 @@ namespace TfsWitAdminTools.Service
         public void Start()
         {
             _process.Start();
+
+            bool hasConfirmation = _confirmations.Length > 0;
+            if(hasConfirmation)
+            {
+                _process.StartInfo.FileName = null;
+                _process.StartInfo.RedirectStandardInput = true;
+                foreach(string confirmation in _confirmations)
+                {
+                    _process.StandardInput.WriteLine(confirmation);
+                }
+                _process.StandardInput.Close();
+            }
         }
 
         public void WaitForExit()

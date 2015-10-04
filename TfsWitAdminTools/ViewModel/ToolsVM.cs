@@ -198,6 +198,22 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
+        #region IsWorrking
+
+        private bool _isWorrking;
+
+        public bool IsWorrking
+        {
+            get { return _isWorrking; }
+            set
+            {
+                if (Set(ref _isWorrking, value))
+                    ClearOutputCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
         #endregion
 
         #region View Models

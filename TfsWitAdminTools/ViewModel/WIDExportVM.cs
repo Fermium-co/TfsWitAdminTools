@@ -1,4 +1,5 @@
-﻿using TfsWitAdminTools.Cmn;
+﻿using System.Threading.Tasks;
+using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
 
@@ -21,9 +22,24 @@ namespace TfsWitAdminTools.ViewModel
                 Path = path;
             });
 
+            //ExportCommand = new DelegateCommand(async () =>
             ExportCommand = new DelegateCommand(() =>
             {
-                Export();
+                Server.IsWorrking = true;
+
+                try
+                {
+                    Server.IsWorrking = true;
+
+                //    await Task.Factory.StartNew(() =>
+                //    {
+                        Export();
+                //    });
+                }
+                finally
+                {
+                    Server.IsWorrking = false;
+                }
             },
             () => (
                 Server.CurrentProjectCollection != null &&
@@ -106,6 +122,8 @@ namespace TfsWitAdminTools.ViewModel
                 string path = Path;
                 if (IsAllWorkItemTypes)
                 {
+                    if (teamProject.WorkItemTypeInfos == null)
+                        Server.GetWITypesCommand.Execute(this);
                     workItemTypeInfos = teamProject.WorkItemTypeInfos;
                     path = System.IO.Path.Combine(path, teamProject.Name);
                     System.IO.Directory.CreateDirectory(path);

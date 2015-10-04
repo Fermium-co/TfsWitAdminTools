@@ -80,12 +80,19 @@ namespace TfsWitAdminTools.Service
 
         #region CoreMethods
 
-        public virtual string InvokeCommand(string argument)
+        public virtual string InvokeCommand(string argument, bool isConfirmRequired = false)
         {
-            IProcessService process = CreateProcess(argument);
+            string[] confirmations = null;
+            if (isConfirmRequired)
+            {
+                confirmations = new string[] { "Yes" };
+            }
+
+            IWitAdminProcessService process = CreateProcess(argument, confirmations);
 
             process.Start();
             //process.WaitForExit();
+
 
             string result = process.ReadToEnd();
 
@@ -97,13 +104,19 @@ namespace TfsWitAdminTools.Service
             return result;
         }
 
-        public async Task<string[]> InvokeCommandWithSplitedResult(string argument)
+        public async Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false)
         {
             CommandInvokedEventArgs eventArg = null;
 
             string[] results = await Task.Factory.StartNew<string[]>(() =>
             {
-                IProcessService process = CreateProcess(argument);
+                string[] confirmations = null;
+                if (isConfirmRequired)
+                {
+                    confirmations = new string[] { "Yes" };
+                }
+
+                IWitAdminProcessService process = CreateProcess(argument, confirmations);
                 process.Start();
                 process.WaitForExit();
 
@@ -130,10 +143,12 @@ namespace TfsWitAdminTools.Service
             return results;
         }
 
-        public virtual IProcessService CreateProcess(string argument)
+        public virtual IWitAdminProcessService CreateProcess(string argument, string[] confirmations)
         {
-            var p = DiManager.Current.Resolve<IProcessService>(new { argument = argument });
-            return p;
+            var confirmationsArg = confirmations ?? new string[] { };
+            var config = DiManager.Current.Resolve<IConfigProvider>();
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument, confirmationsArg, config });
+            return process;
         }
 
         #endregion

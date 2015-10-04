@@ -74,6 +74,7 @@
                                 <TabItem Header="Rename Work Item" DataContext="{Binding Path=WIDRename}">
                                     <StackPanel>
                                         <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="Is All Team Projects"/>
                                         <Button Command="{Binding RenameCommand}" Content="Rename"/>
                                     </StackPanel>
                                 </TabItem>
