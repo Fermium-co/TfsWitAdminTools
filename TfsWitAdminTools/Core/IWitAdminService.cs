@@ -29,7 +29,7 @@ namespace TfsWitAdminTools.Core
 
         Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false);
 
-        IWitAdminProcessService CreateProcess(string argument, string[] confirmations);
+        IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false);
 
         event EventHandler<CommandInvokedEventArgs> CommandInvoked;
     }

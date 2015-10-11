@@ -49,9 +49,9 @@ namespace TfsWitAdminTools.Service
 
         public string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName)
         {
-            string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
+            string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
 
-            string result = InvokeCommand(argument);
+            string result = InvokeCommand(argument, true);
 
             return result;
         }
@@ -82,17 +82,10 @@ namespace TfsWitAdminTools.Service
 
         public virtual string InvokeCommand(string argument, bool isConfirmRequired = false)
         {
-            string[] confirmations = null;
-            if (isConfirmRequired)
-            {
-                confirmations = new string[] { "Yes" };
-            }
-
-            IWitAdminProcessService process = CreateProcess(argument, confirmations);
+            IWitAdminProcessService process = CreateProcess(argument);
 
             process.Start();
-            //process.WaitForExit();
-
+            process.WaitForExit();
 
             string result = process.ReadToEnd();
 
@@ -110,13 +103,7 @@ namespace TfsWitAdminTools.Service
 
             string[] results = await Task.Factory.StartNew<string[]>(() =>
             {
-                string[] confirmations = null;
-                if (isConfirmRequired)
-                {
-                    confirmations = new string[] { "Yes" };
-                }
-
-                IWitAdminProcessService process = CreateProcess(argument, confirmations);
+                IWitAdminProcessService process = CreateProcess(argument, isConfirmRequired);
                 process.Start();
                 process.WaitForExit();
 
@@ -143,11 +130,9 @@ namespace TfsWitAdminTools.Service
             return results;
         }
 
-        public virtual IWitAdminProcessService CreateProcess(string argument, string[] confirmations)
+        public virtual IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false)
         {
-            var confirmationsArg = confirmations ?? new string[] { };
-            var config = DiManager.Current.Resolve<IConfigProvider>();
-            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument, confirmationsArg, config });
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument, isConfirmationRequired = isConfirmationRequired});
             return process;
         }
 

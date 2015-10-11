@@ -6,7 +6,7 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public MainVM(ITfsServerService tfServerService, IWitAdminService wiAdminService, ToolsVM firstTools, ToolsVM secondTools)
+        public MainVM(ITfsServerService tfServerService, ToolsVM firstTools, ToolsVM secondTools)
         {
             this.FirstTools = firstTools;
             string firstToolsUrl = tfServerService.GetFirstServerUrl();
