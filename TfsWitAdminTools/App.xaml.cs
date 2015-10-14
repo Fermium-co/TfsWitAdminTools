@@ -31,7 +31,7 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<IConfigProvider, ConfigProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IDialogProvider, DialogProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IWitAdminProcessService, WitAdminProcessService>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Singletone);
+            DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<ITfsServerService, TFServerService>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<MainVM, MainVM>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<ToolsVM, ToolsVM>(lifeCycle: LifeCycle.Transient);

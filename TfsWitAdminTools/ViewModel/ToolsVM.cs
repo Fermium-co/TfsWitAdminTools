@@ -320,9 +320,9 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Service Props
 
-        public IWitAdminService WIAdminService { get; set; }
+        public IWitAdminService WIAdminService { get; private set; }
 
-        public ITFManager TFManager { get; set; }
+        public ITFManager TFManager { get; private set; }
 
         #endregion
 
