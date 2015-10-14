@@ -22,6 +22,12 @@ A handy tools for TFS process template administration which can be used instead 
 * XML text viewers has syntax highlighter and folding feature.
 * Some functions can be applied for all team projects at the same time (appropriate for project collections which their team projects are using same process template).
 
+**Important Notes :**
+  * If you renamed a work item type successfully but after getting work item type list an strange name or empty string was shown, you should clear TFS local cache from here : 
+
+  C:\Users\< Your Alias >\AppData\Local\Microsoft\Team Foundation\< Version Number >\Cache
+  [http://stackoverflow.com/a/33111541/2818667](http://stackoverflow.com/a/33111541/2818667)
+
 ***
 # License
 MIT License.
