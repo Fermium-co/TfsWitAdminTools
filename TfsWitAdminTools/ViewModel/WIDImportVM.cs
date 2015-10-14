@@ -1,5 +1,6 @@
 ﻿using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
+using TfsWitAdminTools.Model;
 
 namespace TfsWitAdminTools.ViewModel
 {
@@ -25,17 +26,8 @@ namespace TfsWitAdminTools.ViewModel
                 Import();
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
-                !string.IsNullOrEmpty(FileName)
-                )
-            );
-
-            ImportAllCommand = new DelegateCommand(() =>
-            {
-                Import();
-            },
-            () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
+                Server.CurrentProjectCollection != null &&
+                (IsAllTeamProjects == true || Server.CurrentTeamProject != null) &&
                 !string.IsNullOrEmpty(FileName)
                 )
             );
@@ -46,6 +38,17 @@ namespace TfsWitAdminTools.ViewModel
         #endregion
 
         #region Props
+
+        private bool _isAllTeamProjects;
+        public bool IsAllTeamProjects
+        {
+            get { return _isAllTeamProjects; }
+            set
+            {
+                if (Set(ref _isAllTeamProjects, value))
+                    ImportCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         private string _fileName;
         public string FileName
@@ -70,11 +73,20 @@ namespace TfsWitAdminTools.ViewModel
 
         private void Import()
         {
-            string projectCollectionName = Server.CurrentProjectCollection.Name;
-            string teamProjectName = Server.CurrentTeamProject.Name;
+            TeamProjectInfo[] teamProjects = null;
+            if(IsAllTeamProjects)
+                teamProjects = Server.CurrentProjectCollection.TeamProjectInfos;
+            else
+                teamProjects = new TeamProjectInfo[] { Server.CurrentTeamProject };
 
-            Server.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,
+            foreach (TeamProjectInfo teamProject in teamProjects)
+            {
+                string projectCollectionName = Server.CurrentProjectCollection.Name;
+                string teamProjectName = teamProject.Name;
+
+                Server.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,
                 teamProjectName, FileName);
+            }
         }
 
         #endregion

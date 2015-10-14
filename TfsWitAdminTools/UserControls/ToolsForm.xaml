@@ -6,6 +6,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="330">
+    <UserControl.Resources>
+        <Style TargetType="{x:Type Control}" x:Key="BaseStyle">
+            <Setter Property="Margin" Value="1, 2, 1, 2"/>
+        </Style>
+        <Style TargetType="Label" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="TextBox" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="CheckBox" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="ComboBox" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="Expander" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="TabControl" BasedOn="{StaticResource BaseStyle}"/>
+        <Style TargetType="localUserControl:TextEditorEx" BasedOn="{StaticResource BaseStyle}"/>
+    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="6*" Name="grwServer"/>
@@ -14,7 +28,7 @@
         <Expander Name="expServer" Grid.Row="0" IsExpanded="True" Expanded="expServer_Expanded" Collapsed="expServer_Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="165"/>
+                    <RowDefinition Height="190"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Column="0" Orientation="Vertical">
@@ -67,6 +81,7 @@
                                     <StackPanel>
                                         <Label Content="File Name"/>
                                         <TextBox Text="{Binding Path=FileName, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="All Team Projects"/>
                                         <Button Command="{Binding BrowseCommand}" Content="Browse"/>
                                         <Button Command="{Binding ImportCommand}" Content="Import"/>
                                     </StackPanel>
@@ -74,7 +89,7 @@
                                 <TabItem Header="Rename Work Item" DataContext="{Binding Path=WIDRename}">
                                     <StackPanel>
                                         <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="Is All Team Projects"/>
+                                        <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="All Team Projects"/>
                                         <Button Command="{Binding RenameCommand}" Content="Rename"/>
                                     </StackPanel>
                                 </TabItem>

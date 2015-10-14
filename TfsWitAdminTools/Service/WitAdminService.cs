@@ -85,7 +85,7 @@ namespace TfsWitAdminTools.Service
             IWitAdminProcessService process = CreateProcess(argument);
 
             process.Start();
-            process.WaitForExit();
+            //process.WaitForExit();
 
             string result = process.ReadToEnd();
 
