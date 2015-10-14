@@ -6,17 +6,17 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDRenameVM(ToolsVM server)
-            : base(server)
+        public WIDRenameVM(ToolsVM tools)
+            : base(tools)
         {
             RenameCommand = new DelegateCommand(() =>
             {
                 Rename();
             },
             () => (
-                Server.CurrentProjectCollection != null &&
-                (IsAllTeamProjects == true || Server.CurrentTeamProject != null) &&
-                Server.CurrentWorkItemType != null &&
+                Tools.CurrentProjectCollection != null &&
+                (IsAllTeamProjects == true || Tools.CurrentTeamProject != null) &&
+                Tools.CurrentWorkItemType != null &&
                 !string.IsNullOrEmpty(NewName)
                 )
             );
@@ -26,17 +26,17 @@ namespace TfsWitAdminTools.ViewModel
         {
             TeamProjectInfo[] teamProjects = null;
             if (IsAllTeamProjects)
-                teamProjects = Server.CurrentProjectCollection.TeamProjectInfos;
+                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
             else
-                teamProjects = new TeamProjectInfo[] { Server.CurrentTeamProject };
+                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
             foreach (TeamProjectInfo teamProject in teamProjects)
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
                 string teamProjectName = teamProject.Name;
-                string workItemTypeName = Server.CurrentWorkItemType.Name;
+                string workItemTypeName = Tools.CurrentWorkItemType.Name;
 
-                Server.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
+                Tools.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
                     NewName);
             }
         }

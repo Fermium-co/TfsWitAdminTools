@@ -43,7 +43,7 @@
                 <Grid  Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" Name="grwWITypes"/>
-                        <RowDefinition Height="*" Name="grwWIDef"/>
+                        <RowDefinition Height="*" MinHeight="230" Name="grwWIDef"/>
                     </Grid.RowDefinitions>
                     <Expander Name="expWITypes" Grid.Row="0" IsExpanded="True" Expanded="expWITypes_Expanded" Collapsed="expWITypes_Collapsed">
                         <TabControl>
@@ -64,7 +64,7 @@
                                         </Grid.RowDefinitions>
                                         <Button Grid.Row="0" Name="btnShow" Command="{Binding ShowCommand}" Content="Show"/>
                                         <localUserControl:TextEditorEx x:Name="txtWIDefenition" Grid.Row="1"
-                                                    DocumentText="{Binding Path=Server.CurrentWorkItemType.Defenition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    DocumentText="{Binding Path=Tools.CurrentWorkItemType.Defenition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="Export" DataContext="{Binding Path=WIDExport}">
@@ -105,7 +105,7 @@
                                         </Grid.RowDefinitions>
                                         <Button Grid.Row="0" Command="{Binding Path=ShowCommand}">Show</Button>
                                         <localUserControl:TextEditorEx x:Name="txtCategories" Grid.Row="1" 
-                                                    DocumentText="{Binding Path=Server.CurrentTeamProject.Categories}"/>
+                                                    DocumentText="{Binding Path=Tools.CurrentTeamProject.Categories}"/>
                                     </Grid>
                                 </TabItem>
                                 <TabItem Header="Export">

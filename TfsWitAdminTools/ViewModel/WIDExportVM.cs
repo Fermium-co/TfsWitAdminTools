@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.ComponentModel;
+using System.Threading.Tasks;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
@@ -9,8 +10,8 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDExportVM(ToolsVM server, IDialogProvider dialogProvider)
-            : base(server)
+        public WIDExportVM(ToolsVM tools, IDialogProvider dialogProvider)
+            : base(tools)
         {
             this._dialogProvider = dialogProvider;
 
@@ -22,29 +23,31 @@ namespace TfsWitAdminTools.ViewModel
                 Path = path;
             });
 
-            //ExportCommand = new DelegateCommand(async () =>
-            ExportCommand = new DelegateCommand(() =>
+            ExportCommand = new DelegateCommand(async () =>
             {
-                Server.IsWorrking = true;
-
                 try
                 {
-                    Server.IsWorrking = true;
+                    Tools.IsWorrking = true;
 
-                //    await Task.Factory.StartNew(() =>
-                //    {
-                        Export();
-                //    });
+                    //ToDo: using wait
+                    //await Task.Factory.StartNew(() =>
+                    //{
+                    //    Export();
+                    //});
+
+                    await Export();
+
+
                 }
                 finally
                 {
-                    Server.IsWorrking = false;
+                    Tools.IsWorrking = false;
                 }
             },
             () => (
-                Server.CurrentProjectCollection != null &&
-                (IsAllTeamProjects == true || Server.CurrentTeamProject != null) &&
-                (IsAllWorkItemTypes == true || Server.CurrentWorkItemType != null) &&
+                Tools.CurrentProjectCollection != null &&
+                (IsAllTeamProjects == true || Tools.CurrentTeamProject != null) &&
+                (IsAllWorkItemTypes == true || Tools.CurrentWorkItemType != null) &&
                 !string.IsNullOrEmpty(Path)
                 )
             );
@@ -102,19 +105,29 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private void Export()
+        private async Task Export()
         {
-            ProjectCollectionInfo projectCollection = Server.CurrentProjectCollection;
+            ProjectCollectionInfo projectCollection = Tools.CurrentProjectCollection;
 
             TeamProjectInfo[] teamProjects;
 
             if (IsAllTeamProjects)
             {
-                Server.GetAllTeamProjectsWITypesCommand.Execute(this);
+                Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
                 teamProjects = projectCollection.TeamProjectInfos;
+                
+                foreach (TeamProjectInfo teamProject in teamProjects)
+                {
+                    if (teamProject.WorkItemTypeInfos == null)
+                    {
+                        //Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
+                        await Tools.GetAllTeamProjectsWITypes();
+                        break;
+                    }
+                }
             }
             else
-                teamProjects = new TeamProjectInfo[] { Server.CurrentTeamProject };
+                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
             foreach (TeamProjectInfo teamProject in teamProjects)
             {
@@ -122,14 +135,14 @@ namespace TfsWitAdminTools.ViewModel
                 string path = Path;
                 if (IsAllWorkItemTypes)
                 {
-                    if (teamProject.WorkItemTypeInfos == null)
-                        Server.GetWITypesCommand.Execute(this);
+                    //if (teamProject.WorkItemTypeInfos == null)
+                    //    Tools.GetWITypesCommand.Execute(this);
                     workItemTypeInfos = teamProject.WorkItemTypeInfos;
                     path = System.IO.Path.Combine(path, teamProject.Name);
                     System.IO.Directory.CreateDirectory(path);
                 }
                 else
-                    workItemTypeInfos = new WorkItemTypeInfo[] { Server.CurrentWorkItemType };
+                    workItemTypeInfos = new WorkItemTypeInfo[] { Tools.CurrentWorkItemType };
 
                 foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
                     Export(projectCollection, teamProject, workItemTypeInfo, path);
@@ -145,7 +158,7 @@ namespace TfsWitAdminTools.ViewModel
             string fileName = string.Format("{0}.xml", workItemTypeName);
             string fullPath = path = System.IO.Path.Combine(path, fileName);
 
-            Server.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
+            Tools.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                 workItemTypeName, fullPath);
         }
 

@@ -5,20 +5,20 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public CategoryViewerVM(ToolsVM server)
-            : base(server)
+        public CategoryViewerVM(ToolsVM tools)
+            : base(tools)
         {
             ShowCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
-                string categories = Server.WIAdminService
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = Tools.CurrentTeamProject.Name;
+                string categories = Tools.WIAdminService
                     .ExportCategories(TFManager, projectCollectionName, teamProjectName);
 
-                Server.CurrentTeamProject.Categories = categories;
+                Tools.CurrentTeamProject.Categories = categories;
             },
             () =>
-                (Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null)
+                (Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null)
             );
         }
 

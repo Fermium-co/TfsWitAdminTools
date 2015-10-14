@@ -132,7 +132,7 @@ namespace TfsWitAdminTools.Service
 
         public virtual IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false)
         {
-            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument, isConfirmationRequired = isConfirmationRequired});
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument, isConfirmationRequired = isConfirmationRequired });
             return process;
         }
 
@@ -147,7 +147,8 @@ namespace TfsWitAdminTools.Service
         protected virtual void OnCommandInvoked(CommandInvokedEventArgs e)
         {
             if (CommandInvoked != null)
-                CommandInvoked(this, e);
+                System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(CommandInvoked, this, e);
+                //CommandInvoked(this, e);
         }
 
         #endregion

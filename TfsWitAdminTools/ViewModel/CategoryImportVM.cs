@@ -7,8 +7,8 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public CategoryImportVM(ToolsVM server, IDialogProvider dialogProvider)
-            : base(server)
+        public CategoryImportVM(ToolsVM tools, IDialogProvider dialogProvider)
+            : base(tools)
         {
             this._dialogProvider = dialogProvider;
 
@@ -20,13 +20,13 @@ namespace TfsWitAdminTools.ViewModel
 
             ImportCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = Tools.CurrentTeamProject.Name;
 
-                Server.WIAdminService.ImportCategories(TFManager, projectCollectionName, teamProjectName, FileName);
+                Tools.WIAdminService.ImportCategories(TFManager, projectCollectionName, teamProjectName, FileName);
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
+                Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null &&
                 !string.IsNullOrEmpty(FileName)
                 )
             );

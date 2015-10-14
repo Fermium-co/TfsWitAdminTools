@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
@@ -49,11 +50,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetAllTeamProjectsWITypesCommand = new DelegateCommand(() =>
             {
-                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
-                foreach (var teamProject in teamProjects)
-                {
-                    GetWITypes(teamProject);
-                }
+                GetAllTeamProjectsWITypes();
             }, () => CurrentProjectCollection != null);
 
             GetWITypesCommand = new DelegateCommand(() =>
@@ -65,13 +62,13 @@ namespace TfsWitAdminTools.ViewModel
 
             InitChildViewModelsCommand = new DelegateCommand(() =>
             {
-                WIDViewer = DiManager.Current.Resolve<WIDViewerVM>(new { server = this });
-                WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { server = this });
-                WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { server = this });
-                WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { server = this });
-                CategoryViewer = DiManager.Current.Resolve<CategoryViewerVM>(new { server = this });
-                CategoryExport = DiManager.Current.Resolve<CategoryExportVM>(new { server = this });
-                CategoryImport = DiManager.Current.Resolve<CategoryImportVM>(new { server = this });
+                WIDViewer = DiManager.Current.Resolve<WIDViewerVM>(new { tools = this });
+                WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { tools = this });
+                WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { tools = this });
+                WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { tools = this });
+                CategoryViewer = DiManager.Current.Resolve<CategoryViewerVM>(new { tools = this });
+                CategoryExport = DiManager.Current.Resolve<CategoryExportVM>(new { tools = this });
+                CategoryImport = DiManager.Current.Resolve<CategoryImportVM>(new { tools = this });
             },
             () => TFManager != null);
 
@@ -209,6 +206,9 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _isWorrking, value))
                     ClearOutputCommand.RaiseCanExecuteChanged();
+
+                Mouse.OverrideCursor = (_isWorrking == true)
+                    ? Cursors.Wait : null;
             }
         }
 
@@ -346,10 +346,20 @@ namespace TfsWitAdminTools.ViewModel
             return projectCollectionInfos.ToList();
         }
 
+        public async Task GetAllTeamProjectsWITypes()
+        {
+            TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
+            foreach (var teamProject in teamProjects)
+            {
+                await GetWITypes(teamProject);
+            }
+        }
+
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
             string projectCollectionName = CurrentProjectCollection.Name;
             string teamProjectName = teamProject.Name;
+                
             var workItemTypeInfos =
                 (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                 .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })

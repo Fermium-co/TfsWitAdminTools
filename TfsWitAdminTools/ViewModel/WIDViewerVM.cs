@@ -6,22 +6,22 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDViewerVM(ToolsVM server)
-            : base(server)
+        public WIDViewerVM(ToolsVM tools)
+            : base(tools)
         {
             ShowCommand = new DelegateCommand(async () =>
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
-                string workItemTypeName = Server.CurrentWorkItemType.Name;
-                string workItemTypeDefenition = Server.WIAdminService
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = Tools.CurrentTeamProject.Name;
+                string workItemTypeName = Tools.CurrentWorkItemType.Name;
+                string workItemTypeDefenition = Tools.WIAdminService
                     .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
 
-                Server.CurrentWorkItemType.Defenition = workItemTypeDefenition;
+                Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
-                Server.CurrentWorkItemType != null
+                Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null &&
+                Tools.CurrentWorkItemType != null
                 )
             );
         }

@@ -7,8 +7,8 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public CategoryExportVM(ToolsVM server, IDialogProvider dialogProvider)
-            : base(server)
+        public CategoryExportVM(ToolsVM tools, IDialogProvider dialogProvider)
+            : base(tools)
         {
             this._dialogProvider = dialogProvider;
 
@@ -22,8 +22,8 @@ namespace TfsWitAdminTools.ViewModel
 
             ExportCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = Tools.CurrentTeamProject.Name;
 
                 string fileName = FileName;
                 if (string.IsNullOrEmpty(fileName))
@@ -32,10 +32,10 @@ namespace TfsWitAdminTools.ViewModel
                 string path = Path;
                 string fullPath = path = System.IO.Path.Combine(path, fileName);
 
-                Server.WIAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
+                Tools.WIAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null && 
+                Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null && 
                 !string.IsNullOrEmpty(Path)
                 )
             );
