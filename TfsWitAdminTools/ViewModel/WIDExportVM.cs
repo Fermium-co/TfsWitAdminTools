@@ -23,26 +23,37 @@ namespace TfsWitAdminTools.ViewModel
                 Path = path;
             });
 
-            ExportCommand = new DelegateCommand(async () =>
+            //ExportCommand = new DelegateCommand(async () =>
+            ExportCommand = new DelegateCommand(() =>
             {
-                try
-                {
-                    Tools.IsWorrking = true;
+                BackgroundWorker bw = new BackgroundWorker();
+                bw.DoWork += (sender, e) =>
+                    Export();
 
-                    //ToDo: using wait
-                    //await Task.Factory.StartNew(() =>
-                    //{
-                    //    Export();
-                    //});
-
-                    await Export();
-
-
-                }
-                finally
-                {
+                bw.RunWorkerCompleted += (sender, e) =>
                     Tools.IsWorrking = false;
-                }
+
+                Tools.IsWorrking = true;
+                bw.RunWorkerAsync();
+
+                //try
+                //{
+                //    Tools.IsWorrking = true;
+
+
+                //    //ToDo: using wait
+                //    //await Task.Factory.StartNew(() =>
+                //    //{
+                //    //    Export();
+                //    //});
+
+                //    await Export();
+
+                //}
+                //finally
+                //{
+                //    Tools.IsWorrking = false;
+                //}
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -115,7 +126,7 @@ namespace TfsWitAdminTools.ViewModel
             {
                 Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
                 teamProjects = projectCollection.TeamProjectInfos;
-                
+
                 foreach (TeamProjectInfo teamProject in teamProjects)
                 {
                     if (teamProject.WorkItemTypeInfos == null)
@@ -146,10 +157,14 @@ namespace TfsWitAdminTools.ViewModel
 
                 foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
                     Export(projectCollection, teamProject, workItemTypeInfo, path);
+                //System.Threading.Tasks.Task.Factory.StartNew(async () =>
+                //    {
+                //        await Export(projectCollection, teamProject, workItemTypeInfo, path);
+                //    });
             }
         }
 
-        private void Export(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, WorkItemTypeInfo workItemType, string path)
+        private async Task Export(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, WorkItemTypeInfo workItemType, string path)
         {
             string projectCollectionName = projectCollection.Name;
             string teamProjectName = teamProject.Name;
