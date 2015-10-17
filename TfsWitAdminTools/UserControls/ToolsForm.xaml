@@ -86,11 +86,17 @@
                                         <Button Command="{Binding ImportCommand}" Content="Import"/>
                                     </StackPanel>
                                 </TabItem>
-                                <TabItem Header="Rename Work Item" DataContext="{Binding Path=WIDRename}">
+                                <TabItem Header="Rename" DataContext="{Binding Path=WIDRename}">
                                     <StackPanel>
                                         <TextBox Text="{Binding NewName, UpdateSourceTrigger=PropertyChanged}"/>
                                         <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="All Team Projects"/>
                                         <Button Command="{Binding RenameCommand}" Content="Rename"/>
+                                    </StackPanel>
+                                </TabItem>
+                                <TabItem Header="Destroy" DataContext="{Binding Path=WIDDestroy}">
+                                    <StackPanel>
+                                        <CheckBox IsChecked="{Binding IsAllTeamProjects}" Content="All Team Projects"/>
+                                        <Button Command="{Binding DestroyCommand}" Content="Destroy"/>
                                     </StackPanel>
                                 </TabItem>
                             </TabControl>

@@ -66,6 +66,7 @@ namespace TfsWitAdminTools.ViewModel
                 WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { tools = this });
                 WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { tools = this });
                 WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { tools = this });
+                WIDDestroy = DiManager.Current.Resolve<WIDDestroyVM>(new { tools = this });
                 CategoryViewer = DiManager.Current.Resolve<CategoryViewerVM>(new { tools = this });
                 CategoryExport = DiManager.Current.Resolve<CategoryExportVM>(new { tools = this });
                 CategoryImport = DiManager.Current.Resolve<CategoryImportVM>(new { tools = this });
@@ -274,6 +275,20 @@ namespace TfsWitAdminTools.ViewModel
             }
         }
 
+        private WIDDestroyVM _wiDDestroy;
+
+        public WIDDestroyVM WIDDestroy
+        {
+            get { return _wiDDestroy; }
+            set
+            {
+                if (Set(ref _wiDDestroy, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
         private CategoryViewerVM _categoryViewer;
 
         public CategoryViewerVM CategoryViewer
@@ -399,6 +414,8 @@ namespace TfsWitAdminTools.ViewModel
                 WIDImport.ImportCommand.RaiseCanExecuteChanged();
             if (WIDRename != null)
                 WIDRename.RenameCommand.RaiseCanExecuteChanged();
+            if (WIDDestroy != null)
+                WIDDestroy.DestroyCommand.RaiseCanExecuteChanged();
 
             if (CategoryViewer != null)
                 CategoryViewer.ShowCommand.RaiseCanExecuteChanged();

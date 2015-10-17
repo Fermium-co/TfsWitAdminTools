@@ -1,4 +1,6 @@
-﻿using TfsWitAdminTools.Cmn;
+﻿using System.ComponentModel;
+using System.Threading.Tasks;
+using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
 
@@ -23,7 +25,27 @@ namespace TfsWitAdminTools.ViewModel
 
             ImportCommand = new DelegateCommand(() =>
             {
-                Import();
+                //ToDo
+                try
+                {
+                    Tools.IsWorrking = true;
+                    Import();
+                }
+                finally
+                {
+                    if (Tools.IsWorrking)
+                        Tools.IsWorrking = false;
+                }
+
+                //BackgroundWorker bw = new BackgroundWorker();
+                //bw.DoWork += (sender, e) =>
+                //    Import();
+
+                //bw.RunWorkerCompleted += (sender, e) =>
+                //    Tools.IsWorrking = false;
+
+                //Tools.IsWorrking = true;
+                //bw.RunWorkerAsync();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -84,8 +106,8 @@ namespace TfsWitAdminTools.ViewModel
                 string projectCollectionName = Tools.CurrentProjectCollection.Name;
                 string teamProjectName = teamProject.Name;
 
-                Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,
-                teamProjectName, FileName);
+                Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,teamProjectName, 
+                    FileName);
             }
         }
 

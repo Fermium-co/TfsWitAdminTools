@@ -112,6 +112,7 @@
     <Compile Include="ViewModel\ToolsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WIDDestroyVM.cs" />
     <Compile Include="ViewModel\WIDExportVM.cs" />
     <Compile Include="ViewModel\WIDImportVM.cs" />
     <Compile Include="ViewModel\WIDRenameVM.cs" />

@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows.Threading;
 
 namespace TfsWitAdminTools.ViewModel
 {
@@ -15,13 +17,37 @@ namespace TfsWitAdminTools.ViewModel
             if (EqualityComparer<T>.Default.Equals(prop, value))
                 return false;
 
-            if (PropertyChanging != null)
-                PropertyChanging(this, new PropertyChangingEventArgs(propName));
+            PropertyChangingEventHandler tempPropertyChanging = PropertyChanging;
+
+            if (tempPropertyChanging != null)
+            {
+                if (Dispatcher.CurrentDispatcher != null)
+                {
+                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+                    {
+                        tempPropertyChanging(this, new PropertyChangingEventArgs(propName));
+                    }));
+                }
+            }
+            //if (PropertyChanging != null)
+            //    PropertyChanging(this, new PropertyChangingEventArgs(propName));
 
             prop = value;
 
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            PropertyChangedEventHandler tempPropertyChanged = PropertyChanged;
+
+            if (tempPropertyChanged != null)
+            {
+                if (Dispatcher.CurrentDispatcher != null)
+                {
+                    Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+                    {
+                        tempPropertyChanged(this, new PropertyChangedEventArgs(propName));
+                    }));
+                }
+            }
+            //if (PropertyChanged != null)
+            //    PropertyChanged(this, new PropertyChangedEventArgs(propName));
 
             return true;
         }

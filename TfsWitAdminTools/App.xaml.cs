@@ -39,6 +39,7 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<WIDExportVM, WIDExportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDImportVM, WIDImportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDRenameVM, WIDRenameVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<WIDDestroyVM, WIDDestroyVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryViewerVM, CategoryViewerVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryExportVM, CategoryExportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);                

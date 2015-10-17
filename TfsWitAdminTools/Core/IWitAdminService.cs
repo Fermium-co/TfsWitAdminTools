@@ -19,6 +19,8 @@ namespace TfsWitAdminTools.Core
 
         string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
 
+        string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
+
         string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
         void ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);

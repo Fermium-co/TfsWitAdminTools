@@ -23,31 +23,44 @@ namespace TfsWitAdminTools.ViewModel
                 Path = path;
             });
 
-            //ExportCommand = new DelegateCommand(async () =>
-            ExportCommand = new DelegateCommand(() =>
+            ExportCommand = new DelegateCommand(async () =>
+            //ExportCommand = new DelegateCommand(() =>
             {
-                BackgroundWorker bw = new BackgroundWorker();
-                bw.DoWork += (sender, e) =>
-                    Export();
+                //BackgroundWorker bw = new BackgroundWorker();
+                //bw.DoWork += (sender, e) =>
+                //    Export();
 
-                bw.RunWorkerCompleted += (sender, e) =>
-                    Tools.IsWorrking = false;
+                //bw.RunWorkerCompleted += (sender, e) =>
+                //    Tools.IsWorrking = false;
 
-                Tools.IsWorrking = true;
-                bw.RunWorkerAsync();
+                //Tools.IsWorrking = true;
+                //bw.RunWorkerAsync();
+
+                //ToDo
+                try
+                {
+                    Tools.IsWorrking = true;
+                    await Export();
+                }
+                finally
+                {
+                    if (Tools.IsWorrking)
+                        Tools.IsWorrking = false;
+                }
+
 
                 //try
                 //{
                 //    Tools.IsWorrking = true;
 
-
                 //    //ToDo: using wait
                 //    //await Task.Factory.StartNew(() =>
-                //    //{
-                //    //    Export();
-                //    //});
+                //    Task.Factory.StartNew(() =>
+                //    {
+                //        Export();
+                //    }).Wait();
 
-                //    await Export();
+                //    //await Export();
 
                 //}
                 //finally

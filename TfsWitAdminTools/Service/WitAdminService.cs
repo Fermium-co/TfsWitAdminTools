@@ -56,6 +56,15 @@ namespace TfsWitAdminTools.Service
             return result;
         }
 
+        public string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
+        {
+            string argument = string.Format("destroywitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName);
+
+            string result = InvokeCommand(argument, true);
+
+            return result;
+        }
+
         public string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName)
         {
             string argument = string.Format("exportcategories /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);

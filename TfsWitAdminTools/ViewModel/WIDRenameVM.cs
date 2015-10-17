@@ -11,7 +11,17 @@ namespace TfsWitAdminTools.ViewModel
         {
             RenameCommand = new DelegateCommand(() =>
             {
-                Rename();
+                //ToDo
+                try
+                {
+                    Tools.IsWorrking = true;
+                    Rename();
+                }
+                finally
+                {
+                    if (Tools.IsWorrking)
+                        Tools.IsWorrking = false;
+                }
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
