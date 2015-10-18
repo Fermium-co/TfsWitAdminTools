@@ -67,9 +67,14 @@ namespace TfsWitAdminTools.ViewModel
                 WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { tools = this });
                 WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { tools = this });
                 WIDDestroy = DiManager.Current.Resolve<WIDDestroyVM>(new { tools = this });
-                CategoryViewer = DiManager.Current.Resolve<CategoryViewerVM>(new { tools = this });
-                CategoryExport = DiManager.Current.Resolve<CategoryExportVM>(new { tools = this });
-                CategoryImport = DiManager.Current.Resolve<CategoryImportVM>(new { tools = this });
+
+                CategoriesViewer = DiManager.Current.Resolve<CategoriesViewerVM>(new { tools = this });
+                CategoriesExport = DiManager.Current.Resolve<CategoriesExportVM>(new { tools = this });
+                CategoriesImport = DiManager.Current.Resolve<CategoriesImportVM>(new { tools = this });
+
+                ProcessConfigViewer = DiManager.Current.Resolve<ProcessConfigViewerVM>(new { tools = this });
+                ProcessConfigExport = DiManager.Current.Resolve<ProcessConfigExportVM>(new { tools = this });
+                ProcessConfigImport = DiManager.Current.Resolve<ProcessConfigImportVM>(new { tools = this });
             },
             () => TFManager != null);
 
@@ -289,42 +294,84 @@ namespace TfsWitAdminTools.ViewModel
             }
         }
 
-        private CategoryViewerVM _categoryViewer;
+        private CategoriesViewerVM _categoriesViewer;
 
-        public CategoryViewerVM CategoryViewer
+        public CategoriesViewerVM CategoriesViewer
         {
-            get { return _categoryViewer; }
+            get { return _categoriesViewer; }
             set
             {
-                if (Set(ref _categoryViewer, value))
+                if (Set(ref _categoriesViewer, value))
                 {
                     RaiseCommandsCanExecute();
                 }
             }
         }
 
-        private CategoryExportVM _categoryExport;
+        private CategoriesExportVM _categoriesExport;
 
-        public CategoryExportVM CategoryExport
+        public CategoriesExportVM CategoriesExport
         {
-            get { return _categoryExport; }
+            get { return _categoriesExport; }
             set
             {
-                if (Set(ref _categoryExport, value))
+                if (Set(ref _categoriesExport, value))
                 {
                     RaiseCommandsCanExecute();
                 }
             }
         }
 
-        private CategoryImportVM _categoryImport;
+        private CategoriesImportVM _categoriesImport;
 
-        public CategoryImportVM CategoryImport
+        public CategoriesImportVM CategoriesImport
         {
-            get { return _categoryImport; }
+            get { return _categoriesImport; }
             set
             {
-                if (Set(ref _categoryImport, value))
+                if (Set(ref _categoriesImport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigViewerVM _processConfigViewer;
+
+        public ProcessConfigViewerVM ProcessConfigViewer
+        {
+            get { return _processConfigViewer; }
+            set
+            {
+                if (Set(ref _processConfigViewer, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigExportVM _processConfigExport;
+
+        public ProcessConfigExportVM ProcessConfigExport
+        {
+            get { return _processConfigExport; }
+            set
+            {
+                if (Set(ref _processConfigExport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigImportVM _processConfigImport;
+
+        public ProcessConfigImportVM ProcessConfigImport
+        {
+            get { return _processConfigImport; }
+            set
+            {
+                if (Set(ref _processConfigImport, value))
                 {
                     RaiseCommandsCanExecute();
                 }
@@ -352,7 +399,7 @@ namespace TfsWitAdminTools.ViewModel
             {
                 var teamProjectInfos = teamProjects[projectCollection.Key]
                     .Select(teamProjectItem =>
-                        new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null }
+                        new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null, ProcessConfig = null }
                         ).ToArray();
                 var projColInfo = new ProjectCollectionInfo() { Name = projectCollection.Key, TeamProjectInfos = teamProjectInfos };
                 projectCollectionInfos.Add(projColInfo);
@@ -417,12 +464,19 @@ namespace TfsWitAdminTools.ViewModel
             if (WIDDestroy != null)
                 WIDDestroy.DestroyCommand.RaiseCanExecuteChanged();
 
-            if (CategoryViewer != null)
-                CategoryViewer.ShowCommand.RaiseCanExecuteChanged();
-            if (CategoryExport != null)
-                CategoryExport.ExportCommand.RaiseCanExecuteChanged();
-            if (CategoryImport != null)
-                CategoryImport.ImportCommand.RaiseCanExecuteChanged();
+            if (CategoriesViewer != null)
+                CategoriesViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (CategoriesExport != null)
+                CategoriesExport.ExportCommand.RaiseCanExecuteChanged();
+            if (CategoriesImport != null)
+                CategoriesImport.ImportCommand.RaiseCanExecuteChanged();
+
+            if (ProcessConfigViewer != null)
+                ProcessConfigViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (ProcessConfigExport != null)
+                ProcessConfigExport.ExportCommand.RaiseCanExecuteChanged();
+            if (ProcessConfigImport != null)
+                ProcessConfigImport.ImportCommand.RaiseCanExecuteChanged();
         }
 
         public DelegateCommand ClearOutputCommand { get; set; }

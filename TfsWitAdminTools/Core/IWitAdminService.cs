@@ -27,6 +27,14 @@ namespace TfsWitAdminTools.Core
 
         void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
+        string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName);
+        
+
+        void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        
+
+        void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        
         string InvokeCommand(string argument, bool isConfirmRequired = false);
 
         Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false);

@@ -84,6 +84,26 @@ namespace TfsWitAdminTools.Service
             string argument = string.Format("importcategories /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
             InvokeCommand(argument);
         }
+        
+        public string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName)
+        {
+            string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);
+            string result = InvokeCommand(argument);
+
+            return result;
+        }
+
+        public void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        {
+            string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
+            InvokeCommand(argument);
+        }
+
+        public void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        {
+            string argument = string.Format("importprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
+            InvokeCommand(argument);
+        }
 
         #endregion
 

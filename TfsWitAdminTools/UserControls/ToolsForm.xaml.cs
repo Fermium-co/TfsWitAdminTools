@@ -13,7 +13,8 @@ namespace TfsWitAdminTools.UserControls
             InitializeComponent();
 
             txtWIDefenition.Syntax =
-                txtCategories.Syntax = TextEditorEx.SyntaxNames.XML;
+                txtCategories.Syntax =
+                txtProcessConfig.Syntax = TextEditorEx.SyntaxNames.XML;
 
             lsbWITypes.Items.SortDescriptions.Add(new System.ComponentModel.SortDescription("Name", System.ComponentModel.ListSortDirection.Ascending));
         }
