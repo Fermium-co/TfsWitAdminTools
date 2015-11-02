@@ -137,7 +137,7 @@ namespace TfsWitAdminTools.ViewModel
 
             if (IsAllTeamProjects)
             {
-                Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
+                //Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
                 teamProjects = projectCollection.TeamProjectInfos;
 
                 foreach (TeamProjectInfo teamProject in teamProjects)

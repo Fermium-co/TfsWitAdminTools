@@ -43,13 +43,13 @@
                 <Grid  Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" Name="grwWITypes"/>
-                        <RowDefinition Height="*" MinHeight="250" Name="grwWIDef"/>
+                        <RowDefinition Height="*" MinHeight="260" Name="grwWITools"/>
                     </Grid.RowDefinitions>
                     <Expander Name="expWITypes" Grid.Row="0" IsExpanded="True" Expanded="expWITypes_Expanded" Collapsed="expWITypes_Collapsed">
                         <TabControl>
                             <TabItem Header="Work Item Types">
                                 <ListBox Name="lsbWITypes" ItemsSource="{Binding Path=CurrentTeamProject.WorkItemTypeInfos}" DisplayMemberPath="Name" 
-                                         SelectedItem="{Binding CurrentWorkItemType}" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto"/>
+                                         SelectedItem="{Binding CurrentWorkItemType}" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible"/>
                             </TabItem>
                         </TabControl>
                     </Expander>
