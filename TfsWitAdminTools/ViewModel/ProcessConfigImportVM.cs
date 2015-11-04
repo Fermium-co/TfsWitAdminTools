@@ -27,13 +27,13 @@ namespace TfsWitAdminTools.ViewModel
             {
                 try
                 {
-                    Tools.IsWorrking = true;
+                    Tools.BeginWorking();
+
                     await Import();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
             },
             () => (

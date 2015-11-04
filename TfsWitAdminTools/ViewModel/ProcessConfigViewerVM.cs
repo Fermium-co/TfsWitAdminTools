@@ -15,12 +15,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             ShowCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = Tools.CurrentTeamProject.Name;
-                string processConfigs = Tools.WIAdminService
-                    .ExportProcessConfig(TFManager, projectCollectionName, teamProjectName);
-
-                Tools.CurrentTeamProject.ProcessConfig = processConfigs;
+                Show();
             },
             () =>
                 (
@@ -33,6 +28,20 @@ namespace TfsWitAdminTools.ViewModel
         #endregion
 
         #region Props
+
+        #endregion
+
+        #region Methods
+
+        private void Show()
+        {
+            string projectCollectionName = Tools.CurrentProjectCollection.Name;
+            string teamProjectName = Tools.CurrentTeamProject.Name;
+            string processConfigs = Tools.WIAdminService
+                .ExportProcessConfig(TFManager, projectCollectionName, teamProjectName);
+
+            Tools.CurrentTeamProject.ProcessConfig = processConfigs;
+        }
 
         #endregion
 

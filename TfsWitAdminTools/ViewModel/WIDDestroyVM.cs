@@ -14,18 +14,17 @@ namespace TfsWitAdminTools.ViewModel
         public WIDDestroyVM(ToolsVM tools)
             : base(tools)
         {
-            DestroyCommand = new DelegateCommand(() =>
+            DestroyCommand = new DelegateCommand(async () =>
             {
-                //ToDo
                 try
                 {
-                    Tools.IsWorrking = true;
-                    Destroy();
+                    Tools.BeginWorking();
+
+                    await Destroy();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
             },
             () => (
@@ -34,24 +33,6 @@ namespace TfsWitAdminTools.ViewModel
                 Tools.CurrentWorkItemType != null
                 )
             );
-        }
-
-        private void Destroy()
-        {
-            TeamProjectInfo[] teamProjects = null;
-            if (IsAllTeamProjects)
-                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
-            else
-                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
-
-            foreach (TeamProjectInfo teamProject in teamProjects)
-            {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = teamProject.Name;
-                string workItemTypeName = Tools.CurrentWorkItemType.Name;
-
-                Tools.WIAdminService.DestroyWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
-            }
         }
 
         #endregion
@@ -66,6 +47,28 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _isAllTeamProjects, value))
                     DestroyCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        private async Task Destroy()
+        {
+            TeamProjectInfo[] teamProjects = null;
+            if (IsAllTeamProjects)
+                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
+            else
+                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
+
+            foreach (TeamProjectInfo teamProject in teamProjects)
+            {
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = teamProject.Name;
+                string workItemTypeName = Tools.CurrentWorkItemType.Name;
+
+                Tools.WIAdminService.DestroyWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
             }
         }
 

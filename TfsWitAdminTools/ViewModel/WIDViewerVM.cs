@@ -9,21 +9,30 @@ namespace TfsWitAdminTools.ViewModel
         public WIDViewerVM(ToolsVM tools)
             : base(tools)
         {
-            ShowCommand = new DelegateCommand(async () =>
+            ShowCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = Tools.CurrentTeamProject.Name;
-                string workItemTypeName = Tools.CurrentWorkItemType.Name;
-                string workItemTypeDefenition = Tools.WIAdminService
-                    .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
-
-                Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
+                Show();
             },
             () => (
                 Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null &&
                 Tools.CurrentWorkItemType != null
                 )
             );
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void Show()
+        {
+            string projectCollectionName = Tools.CurrentProjectCollection.Name;
+            string teamProjectName = Tools.CurrentTeamProject.Name;
+            string workItemTypeName = Tools.CurrentWorkItemType.Name;
+            string workItemTypeDefenition = Tools.WIAdminService
+                .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
+
+            Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
         }
 
         #endregion

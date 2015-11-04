@@ -10,12 +10,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             ShowCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = Tools.CurrentTeamProject.Name;
-                string categories = Tools.WIAdminService
-                    .ExportCategories(TFManager, projectCollectionName, teamProjectName);
-
-                Tools.CurrentTeamProject.Categories = categories;
+                Show();
             },
             () =>
                 (
@@ -28,6 +23,20 @@ namespace TfsWitAdminTools.ViewModel
         #endregion
 
         #region Props
+
+        #endregion
+
+        #region Methods
+
+        private void Show()
+        {
+            string projectCollectionName = Tools.CurrentProjectCollection.Name;
+            string teamProjectName = Tools.CurrentTeamProject.Name;
+            string categories = Tools.WIAdminService
+                .ExportCategories(TFManager, projectCollectionName, teamProjectName);
+
+            Tools.CurrentTeamProject.Categories = categories;
+        }
 
         #endregion
 

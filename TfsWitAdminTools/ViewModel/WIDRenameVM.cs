@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 using TfsWitAdminTools.Model;
 namespace TfsWitAdminTools.ViewModel
 {
@@ -9,18 +10,17 @@ namespace TfsWitAdminTools.ViewModel
         public WIDRenameVM(ToolsVM tools)
             : base(tools)
         {
-            RenameCommand = new DelegateCommand(() =>
+            RenameCommand = new DelegateCommand(async () =>
             {
-                //ToDo
                 try
                 {
-                    Tools.IsWorrking = true;
-                    Rename();
+                    Tools.BeginWorking();
+
+                    await Rename();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
             },
             () => (
@@ -30,25 +30,6 @@ namespace TfsWitAdminTools.ViewModel
                 !string.IsNullOrEmpty(NewName)
                 )
             );
-        }
-
-        private void Rename()
-        {
-            TeamProjectInfo[] teamProjects = null;
-            if (IsAllTeamProjects)
-                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
-            else
-                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
-
-            foreach (TeamProjectInfo teamProject in teamProjects)
-            {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = teamProject.Name;
-                string workItemTypeName = Tools.CurrentWorkItemType.Name;
-
-                Tools.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
-                    NewName);
-            }
         }
 
         #endregion
@@ -74,6 +55,29 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _newName, value))
                     RenameCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
+        #region Methods
+
+        private async Task Rename()
+        {
+            TeamProjectInfo[] teamProjects = null;
+            if (IsAllTeamProjects)
+                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
+            else
+                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
+
+            foreach (TeamProjectInfo teamProject in teamProjects)
+            {
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = teamProject.Name;
+                string workItemTypeName = Tools.CurrentWorkItemType.Name;
+
+                Tools.WIAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
+                    NewName);
             }
         }
 

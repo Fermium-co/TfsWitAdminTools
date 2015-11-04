@@ -23,29 +23,18 @@ namespace TfsWitAdminTools.ViewModel
                 FileName = fileName;
             });
 
-            ImportCommand = new DelegateCommand(() =>
+            ImportCommand = new DelegateCommand(async () =>
             {
-                //ToDo
                 try
                 {
-                    Tools.IsWorrking = true;
-                    Import();
+                    Tools.BeginWorking();
+
+                    await Import();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
-
-                //BackgroundWorker bw = new BackgroundWorker();
-                //bw.DoWork += (sender, e) =>
-                //    Import();
-
-                //bw.RunWorkerCompleted += (sender, e) =>
-                //    Tools.IsWorrking = false;
-
-                //Tools.IsWorrking = true;
-                //bw.RunWorkerAsync();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -93,7 +82,7 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private void Import()
+        private async Task Import()
         {
             TeamProjectInfo[] teamProjects = null;
             if(IsAllTeamProjects)

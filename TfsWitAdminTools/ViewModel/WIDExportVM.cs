@@ -24,49 +24,17 @@ namespace TfsWitAdminTools.ViewModel
             });
 
             ExportCommand = new DelegateCommand(async () =>
-            //ExportCommand = new DelegateCommand(() =>
             {
-                //BackgroundWorker bw = new BackgroundWorker();
-                //bw.DoWork += (sender, e) =>
-                //    Export();
-
-                //bw.RunWorkerCompleted += (sender, e) =>
-                //    Tools.IsWorrking = false;
-
-                //Tools.IsWorrking = true;
-                //bw.RunWorkerAsync();
-
-                //ToDo
                 try
                 {
-                    Tools.IsWorrking = true;
+                    Tools.BeginWorking();
+
                     await Export();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
-
-
-                //try
-                //{
-                //    Tools.IsWorrking = true;
-
-                //    //ToDo: using wait
-                //    //await Task.Factory.StartNew(() =>
-                //    Task.Factory.StartNew(() =>
-                //    {
-                //        Export();
-                //    }).Wait();
-
-                //    //await Export();
-
-                //}
-                //finally
-                //{
-                //    Tools.IsWorrking = false;
-                //}
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -137,14 +105,12 @@ namespace TfsWitAdminTools.ViewModel
 
             if (IsAllTeamProjects)
             {
-                //Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
                 teamProjects = projectCollection.TeamProjectInfos;
 
                 foreach (TeamProjectInfo teamProject in teamProjects)
                 {
                     if (teamProject.WorkItemTypeInfos == null)
                     {
-                        //Tools.GetAllTeamProjectsWITypesCommand.Execute(this);
                         await Tools.GetAllTeamProjectsWITypes();
                         break;
                     }
@@ -159,8 +125,6 @@ namespace TfsWitAdminTools.ViewModel
                 string path = Path;
                 if (IsAllWorkItemTypes)
                 {
-                    //if (teamProject.WorkItemTypeInfos == null)
-                    //    Tools.GetWITypesCommand.Execute(this);
                     workItemTypeInfos = teamProject.WorkItemTypeInfos;
                     path = System.IO.Path.Combine(path, teamProject.Name);
                     System.IO.Directory.CreateDirectory(path);
@@ -170,10 +134,6 @@ namespace TfsWitAdminTools.ViewModel
 
                 foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
                     Export(projectCollection, teamProject, workItemTypeInfo, path);
-                //System.Threading.Tasks.Task.Factory.StartNew(async () =>
-                //    {
-                //        await Export(projectCollection, teamProject, workItemTypeInfo, path);
-                //    });
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using TfsWitAdminTools.Cmn;
@@ -95,7 +96,9 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
-        #region Props
+        #region Firalds and Props
+
+        private List<string> _currentWorks = new List<string>();
 
         #region Address
 
@@ -205,7 +208,7 @@ namespace TfsWitAdminTools.ViewModel
 
         private bool _isWorrking;
 
-        public bool IsWorrking
+        private bool IsWorrking
         {
             get { return _isWorrking; }
             set
@@ -410,10 +413,19 @@ namespace TfsWitAdminTools.ViewModel
 
         public async Task GetAllTeamProjectsWITypes()
         {
-            TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
-            foreach (var teamProject in teamProjects)
+            try
             {
-                await GetWITypes(teamProject);
+                BeginWorking();
+
+                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
+                foreach (var teamProject in teamProjects)
+                {
+                    await GetWITypes(teamProject);
+                }
+            }
+            finally
+            {
+                EndWorking();
             }
         }
 
@@ -421,13 +433,36 @@ namespace TfsWitAdminTools.ViewModel
         {
             string projectCollectionName = CurrentProjectCollection.Name;
             string teamProjectName = teamProject.Name;
-                
+
             var workItemTypeInfos =
                 (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                 .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
                 .ToArray();
 
             teamProject.WorkItemTypeInfos = workItemTypeInfos;
+        }
+
+        public void BeginWorking([CallerMemberName]string callerMethodName = null)
+        {
+            if (IsWorrking == false)
+                IsWorrking = true;
+
+            if (callerMethodName != null)
+                _currentWorks.Add(callerMethodName);
+        }
+
+        public void EndWorking([CallerMemberName]string callerMethodName = null)
+        {
+            if (callerMethodName != null)
+            {
+                int index;
+                index = _currentWorks.IndexOf(callerMethodName);
+                if (index != -1)
+                    _currentWorks.RemoveAt(index);
+
+                if (!_currentWorks.Any())
+                    IsWorrking = false;
+            }
         }
 
         #endregion

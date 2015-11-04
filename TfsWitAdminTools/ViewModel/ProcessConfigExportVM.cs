@@ -8,11 +8,11 @@ using TfsWitAdminTools.Model;
 
 namespace TfsWitAdminTools.ViewModel
 {
-        public class ProcessConfigExportVM : ToolsChildVM
+    public class ProcessConfigExportVM : ToolsChildVM
     {
         #region Ctor
 
-            public ProcessConfigExportVM(ToolsVM tools, IDialogProvider dialogProvider)
+        public ProcessConfigExportVM(ToolsVM tools, IDialogProvider dialogProvider)
             : base(tools)
         {
             this._dialogProvider = dialogProvider;
@@ -29,13 +29,13 @@ namespace TfsWitAdminTools.ViewModel
             {
                 try
                 {
-                    Tools.IsWorrking = true;
+                    Tools.BeginWorking();
+
                     await Export();
                 }
                 finally
                 {
-                    if (Tools.IsWorrking)
-                        Tools.IsWorrking = false;
+                    Tools.EndWorking();
                 }
             },
             () => (
