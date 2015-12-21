@@ -6,13 +6,19 @@ A handy tools for TFS process template administration which can be used instead 
 
 # Features
 **Work item type :**
-  * View names.
-  * View definition XML.
-  * Export definition XML files.
-  * Import definition XML file.
-  * Rename work item types. 
+  * View names
+  * View definition XML
+  * Export definition XML files
+  * Import definition XML file
+  * Rename work item types 
+  * Destroy work item types
 
 **Categories :**
+  * View XML.
+  * Export XML file
+  * Import XML file
+
+**Process config :**
   * View XML.
   * Export XML file
   * Import XML file
