@@ -1,28 +1,38 @@
 ﻿
+using System.Threading.Tasks;
 namespace TfsWitAdminTools.ViewModel
 {
     public class WIDViewerVM : ToolsChildVM
     {
         #region Ctor
 
-        public WIDViewerVM(ToolsVM server)
-            : base(server)
+        public WIDViewerVM(ToolsVM tools)
+            : base(tools)
         {
             ShowCommand = new DelegateCommand(() =>
             {
-                string projectCollectionName = Server.CurrentProjectCollection.Name;
-                string teamProjectName = Server.CurrentTeamProject.Name;
-                string workItemTypeName = Server.CurrentWorkItemType.Name;
-                string workItemTypeDefenition = Server.WIAdminService
-                    .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
-
-                Server.CurrentWorkItemType.Defenition = workItemTypeDefenition;
+                Show();
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
-                Server.CurrentWorkItemType != null
+                Tools.CurrentProjectCollection != null && Tools.CurrentTeamProject != null &&
+                Tools.CurrentWorkItemType != null
                 )
             );
+        }
+
+        #endregion
+
+        #region Methods
+
+        private void Show()
+        {
+            string projectCollectionName = Tools.CurrentProjectCollection.Name;
+            string teamProjectName = Tools.CurrentTeamProject.Name;
+            string workItemTypeName = Tools.CurrentWorkItemType.Name;
+            string workItemTypeDefenition = Tools.WIAdminService
+                .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
+
+            Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
         }
 
         #endregion

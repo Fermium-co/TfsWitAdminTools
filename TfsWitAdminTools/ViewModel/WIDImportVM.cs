@@ -1,5 +1,8 @@
-﻿using TfsWitAdminTools.Cmn;
+﻿using System.ComponentModel;
+using System.Threading.Tasks;
+using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
+using TfsWitAdminTools.Model;
 
 namespace TfsWitAdminTools.ViewModel
 {
@@ -7,8 +10,8 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public WIDImportVM(ToolsVM server, IDialogProvider dialogProvider)
-            : base(server)
+        public WIDImportVM(ToolsVM tools, IDialogProvider dialogProvider)
+            : base(tools)
         {
             this._dialogProvider = dialogProvider;
 
@@ -20,22 +23,22 @@ namespace TfsWitAdminTools.ViewModel
                 FileName = fileName;
             });
 
-            ImportCommand = new DelegateCommand(() =>
+            ImportCommand = new DelegateCommand(async () =>
             {
-                Import();
-            },
-            () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
-                !string.IsNullOrEmpty(FileName)
-                )
-            );
+                try
+                {
+                    Tools.BeginWorking();
 
-            ImportAllCommand = new DelegateCommand(() =>
-            {
-                Import();
+                    await Import();
+                }
+                finally
+                {
+                    Tools.EndWorking();
+                }
             },
             () => (
-                Server.CurrentProjectCollection != null && Server.CurrentTeamProject != null &&
+                Tools.CurrentProjectCollection != null &&
+                (IsAllTeamProjects == true || Tools.CurrentTeamProject != null) &&
                 !string.IsNullOrEmpty(FileName)
                 )
             );
@@ -46,6 +49,17 @@ namespace TfsWitAdminTools.ViewModel
         #endregion
 
         #region Props
+
+        private bool _isAllTeamProjects;
+        public bool IsAllTeamProjects
+        {
+            get { return _isAllTeamProjects; }
+            set
+            {
+                if (Set(ref _isAllTeamProjects, value))
+                    ImportCommand.RaiseCanExecuteChanged();
+            }
+        }
 
         private string _fileName;
         public string FileName
@@ -68,13 +82,22 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private void Import()
+        private async Task Import()
         {
-            string projectCollectionName = Server.CurrentProjectCollection.Name;
-            string teamProjectName = Server.CurrentTeamProject.Name;
+            TeamProjectInfo[] teamProjects = null;
+            if(IsAllTeamProjects)
+                teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
+            else
+                teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
-            Server.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,
-                teamProjectName, FileName);
+            foreach (TeamProjectInfo teamProject in teamProjects)
+            {
+                string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                string teamProjectName = teamProject.Name;
+
+                Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,teamProjectName, 
+                    FileName);
+            }
         }
 
         #endregion

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
@@ -49,11 +51,7 @@ namespace TfsWitAdminTools.ViewModel
 
             GetAllTeamProjectsWITypesCommand = new DelegateCommand(() =>
             {
-                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
-                foreach (var teamProject in teamProjects)
-                {
-                    GetWITypes(teamProject);
-                }
+                GetAllTeamProjectsWITypes();
             }, () => CurrentProjectCollection != null);
 
             GetWITypesCommand = new DelegateCommand(() =>
@@ -65,13 +63,19 @@ namespace TfsWitAdminTools.ViewModel
 
             InitChildViewModelsCommand = new DelegateCommand(() =>
             {
-                WIDViewer = DiManager.Current.Resolve<WIDViewerVM>(new { server = this });
-                WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { server = this });
-                WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { server = this });
-                WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { server = this });
-                CategoryViewer = DiManager.Current.Resolve<CategoryViewerVM>(new { server = this });
-                CategoryExport = DiManager.Current.Resolve<CategoryExportVM>(new { server = this });
-                CategoryImport = DiManager.Current.Resolve<CategoryImportVM>(new { server = this });
+                WIDViewer = DiManager.Current.Resolve<WIDViewerVM>(new { tools = this });
+                WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { tools = this });
+                WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { tools = this });
+                WIDRename = DiManager.Current.Resolve<WIDRenameVM>(new { tools = this });
+                WIDDestroy = DiManager.Current.Resolve<WIDDestroyVM>(new { tools = this });
+
+                CategoriesViewer = DiManager.Current.Resolve<CategoriesViewerVM>(new { tools = this });
+                CategoriesExport = DiManager.Current.Resolve<CategoriesExportVM>(new { tools = this });
+                CategoriesImport = DiManager.Current.Resolve<CategoriesImportVM>(new { tools = this });
+
+                ProcessConfigViewer = DiManager.Current.Resolve<ProcessConfigViewerVM>(new { tools = this });
+                ProcessConfigExport = DiManager.Current.Resolve<ProcessConfigExportVM>(new { tools = this });
+                ProcessConfigImport = DiManager.Current.Resolve<ProcessConfigImportVM>(new { tools = this });
             },
             () => TFManager != null);
 
@@ -92,7 +96,9 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
-        #region Props
+        #region Firalds and Props
+
+        private List<string> _currentWorks = new List<string>();
 
         #region Address
 
@@ -168,14 +174,6 @@ namespace TfsWitAdminTools.ViewModel
 
         #region WorkItemType
 
-        private List<WorkItemTypeInfo> _workItemTypeInfos;
-
-        public List<WorkItemTypeInfo> WorkItemTypeInfos
-        {
-            get { return _workItemTypeInfos; }
-            set { Set(ref _workItemTypeInfos, value); }
-        }
-
         private WorkItemTypeInfo _currentWorkItemType;
 
         public WorkItemTypeInfo CurrentWorkItemType
@@ -197,7 +195,30 @@ namespace TfsWitAdminTools.ViewModel
         public string Output
         {
             get { return _output; }
-            set { Set(ref _output, value); }
+            set
+            {
+                if (Set(ref _output, value))
+                    ClearOutputCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        #endregion
+
+        #region IsWorrking
+
+        private bool _isWorrking;
+
+        private bool IsWorrking
+        {
+            get { return _isWorrking; }
+            set
+            {
+                if (Set(ref _isWorrking, value))
+                    ClearOutputCommand.RaiseCanExecuteChanged();
+
+                Mouse.OverrideCursor = (_isWorrking == true)
+                    ? Cursors.Wait : null;
+            }
         }
 
         #endregion
@@ -262,42 +283,98 @@ namespace TfsWitAdminTools.ViewModel
             }
         }
 
-        private CategoryViewerVM _categoryViewer;
+        private WIDDestroyVM _wiDDestroy;
 
-        public CategoryViewerVM CategoryViewer
+        public WIDDestroyVM WIDDestroy
         {
-            get { return _categoryViewer; }
+            get { return _wiDDestroy; }
             set
             {
-                if (Set(ref _categoryViewer, value))
+                if (Set(ref _wiDDestroy, value))
                 {
                     RaiseCommandsCanExecute();
                 }
             }
         }
 
-        private CategoryExportVM _categoryExport;
+        private CategoriesViewerVM _categoriesViewer;
 
-        public CategoryExportVM CategoryExport
+        public CategoriesViewerVM CategoriesViewer
         {
-            get { return _categoryExport; }
+            get { return _categoriesViewer; }
             set
             {
-                if (Set(ref _categoryExport, value))
+                if (Set(ref _categoriesViewer, value))
                 {
                     RaiseCommandsCanExecute();
                 }
             }
         }
 
-        private CategoryImportVM _categoryImport;
+        private CategoriesExportVM _categoriesExport;
 
-        public CategoryImportVM CategoryImport
+        public CategoriesExportVM CategoriesExport
         {
-            get { return _categoryImport; }
+            get { return _categoriesExport; }
             set
             {
-                if (Set(ref _categoryImport, value))
+                if (Set(ref _categoriesExport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private CategoriesImportVM _categoriesImport;
+
+        public CategoriesImportVM CategoriesImport
+        {
+            get { return _categoriesImport; }
+            set
+            {
+                if (Set(ref _categoriesImport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigViewerVM _processConfigViewer;
+
+        public ProcessConfigViewerVM ProcessConfigViewer
+        {
+            get { return _processConfigViewer; }
+            set
+            {
+                if (Set(ref _processConfigViewer, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigExportVM _processConfigExport;
+
+        public ProcessConfigExportVM ProcessConfigExport
+        {
+            get { return _processConfigExport; }
+            set
+            {
+                if (Set(ref _processConfigExport, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
+
+        private ProcessConfigImportVM _processConfigImport;
+
+        public ProcessConfigImportVM ProcessConfigImport
+        {
+            get { return _processConfigImport; }
+            set
+            {
+                if (Set(ref _processConfigImport, value))
                 {
                     RaiseCommandsCanExecute();
                 }
@@ -308,9 +385,9 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Service Props
 
-        public IWitAdminService WIAdminService { get; set; }
+        public IWitAdminService WIAdminService { get; private set; }
 
-        public ITFManager TFManager { get; set; }
+        public ITFManager TFManager { get; private set; }
 
         #endregion
 
@@ -325,7 +402,7 @@ namespace TfsWitAdminTools.ViewModel
             {
                 var teamProjectInfos = teamProjects[projectCollection.Key]
                     .Select(teamProjectItem =>
-                        new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null }
+                        new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null, ProcessConfig = null }
                         ).ToArray();
                 var projColInfo = new ProjectCollectionInfo() { Name = projectCollection.Key, TeamProjectInfos = teamProjectInfos };
                 projectCollectionInfos.Add(projColInfo);
@@ -334,16 +411,58 @@ namespace TfsWitAdminTools.ViewModel
             return projectCollectionInfos.ToList();
         }
 
+        public async Task GetAllTeamProjectsWITypes()
+        {
+            try
+            {
+                BeginWorking();
+
+                TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
+                foreach (var teamProject in teamProjects)
+                {
+                    await GetWITypes(teamProject);
+                }
+            }
+            finally
+            {
+                EndWorking();
+            }
+        }
+
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
             string projectCollectionName = CurrentProjectCollection.Name;
             string teamProjectName = teamProject.Name;
+
             var workItemTypeInfos =
                 (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                 .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
                 .ToArray();
 
             teamProject.WorkItemTypeInfos = workItemTypeInfos;
+        }
+
+        public void BeginWorking([CallerMemberName]string callerMethodName = null)
+        {
+            if (IsWorrking == false)
+                IsWorrking = true;
+
+            if (callerMethodName != null)
+                _currentWorks.Add(callerMethodName);
+        }
+
+        public void EndWorking([CallerMemberName]string callerMethodName = null)
+        {
+            if (callerMethodName != null)
+            {
+                int index;
+                index = _currentWorks.IndexOf(callerMethodName);
+                if (index != -1)
+                    _currentWorks.RemoveAt(index);
+
+                if (!_currentWorks.Any())
+                    IsWorrking = false;
+            }
         }
 
         #endregion
@@ -367,6 +486,7 @@ namespace TfsWitAdminTools.ViewModel
             GetAllTeamProjectsWITypesCommand.RaiseCanExecuteChanged();
             GetWITypesCommand.RaiseCanExecuteChanged();
             SetAddressCommand.RaiseCanExecuteChanged();
+            ClearOutputCommand.RaiseCanExecuteChanged();
 
             if (WIDViewer != null)
                 WIDViewer.ShowCommand.RaiseCanExecuteChanged();
@@ -376,13 +496,22 @@ namespace TfsWitAdminTools.ViewModel
                 WIDImport.ImportCommand.RaiseCanExecuteChanged();
             if (WIDRename != null)
                 WIDRename.RenameCommand.RaiseCanExecuteChanged();
+            if (WIDDestroy != null)
+                WIDDestroy.DestroyCommand.RaiseCanExecuteChanged();
 
-            if (CategoryViewer != null)
-                CategoryViewer.ShowCommand.RaiseCanExecuteChanged();
-            if (CategoryExport != null)
-                CategoryExport.ExportCommand.RaiseCanExecuteChanged();
-            if (CategoryImport != null)
-                CategoryImport.ImportCommand.RaiseCanExecuteChanged();
+            if (CategoriesViewer != null)
+                CategoriesViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (CategoriesExport != null)
+                CategoriesExport.ExportCommand.RaiseCanExecuteChanged();
+            if (CategoriesImport != null)
+                CategoriesImport.ImportCommand.RaiseCanExecuteChanged();
+
+            if (ProcessConfigViewer != null)
+                ProcessConfigViewer.ShowCommand.RaiseCanExecuteChanged();
+            if (ProcessConfigExport != null)
+                ProcessConfigExport.ExportCommand.RaiseCanExecuteChanged();
+            if (ProcessConfigImport != null)
+                ProcessConfigImport.ImportCommand.RaiseCanExecuteChanged();
         }
 
         public DelegateCommand ClearOutputCommand { get; set; }

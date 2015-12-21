@@ -28,10 +28,10 @@ namespace TfsWitAdminTools
         {
             DiManager.Current.Init();
             DiManager.Current.Register<ITFManager, TFManager>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<IConfigProvider, DefaultConfigProvider>(lifeCycle: LifeCycle.Singletone);
+            DiManager.Current.Register<IConfigProvider, ConfigProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IDialogProvider, DialogProvider>(lifeCycle: LifeCycle.Singletone);
-            DiManager.Current.Register<IProcessService, DefaultProcessService>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Singletone);
+            DiManager.Current.Register<IWitAdminProcessService, WitAdminProcessService>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<ITfsServerService, TFServerService>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<MainVM, MainVM>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<ToolsVM, ToolsVM>(lifeCycle: LifeCycle.Transient);
@@ -39,9 +39,13 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<WIDExportVM, WIDExportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDImportVM, WIDImportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDRenameVM, WIDRenameVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<CategoryViewerVM, CategoryViewerVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<CategoryExportVM, CategoryExportVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<CategoryImportVM, CategoryImportVM>(lifeCycle: LifeCycle.Transient);                
+            DiManager.Current.Register<WIDDestroyVM, WIDDestroyVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<CategoriesViewerVM, CategoriesViewerVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<CategoriesExportVM, CategoriesExportVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<CategoriesImportVM, CategoriesImportVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ProcessConfigViewerVM, ProcessConfigViewerVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ProcessConfigExportVM, ProcessConfigExportVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ProcessConfigImportVM, ProcessConfigImportVM>(lifeCycle: LifeCycle.Transient);    
         }
     }
 }

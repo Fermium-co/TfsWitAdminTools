@@ -33,5 +33,15 @@ namespace TfsWitAdminTools.Model
                 SetValue(ref _categories, value);
             }
         }
+
+        private string _processConfig;
+        public string ProcessConfig
+        {
+            get { return _processConfig; }
+            set
+            {
+                SetValue(ref _processConfig, value);
+            }
+        }
     }
 }

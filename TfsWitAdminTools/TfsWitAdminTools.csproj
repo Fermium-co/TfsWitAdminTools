@@ -73,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -90,27 +91,31 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Core\IConfigProvider.cs" />
-    <Compile Include="Core\IProcessService.cs" />
-    <Compile Include="Service\DefaultConfigProvider.cs" />
-    <Compile Include="Service\DefaultProcessService.cs" />
+    <Compile Include="Core\IWitAdminProcessService.cs" />
+    <Compile Include="Service\ConfigProvider.cs" />
+    <Compile Include="Service\WitAdminProcessService.cs" />
     <Compile Include="Service\TFServerService.cs" />
     <Compile Include="Service\WitAdminService.cs" />
     <Compile Include="UserControls\MainForm.xaml.cs">
       <DependentUpon>MainForm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UserControls\ServerForm.xaml.cs">
-      <DependentUpon>ServerForm.xaml</DependentUpon>
+    <Compile Include="UserControls\ToolsForm.xaml.cs">
+      <DependentUpon>ToolsForm.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserControls\TextEditorEx.cs" />
-    <Compile Include="ViewModel\CategoryExportVM.cs" />
-    <Compile Include="ViewModel\CategoryImportVM.cs" />
-    <Compile Include="ViewModel\CategoryViewerVM.cs" />
+    <Compile Include="ViewModel\CategoriesExportVM.cs" />
+    <Compile Include="ViewModel\CategoriesImportVM.cs" />
+    <Compile Include="ViewModel\CategoriesViewerVM.cs" />
     <Compile Include="ViewModel\DelegateCommand.cs" />
     <Compile Include="ViewModel\MainVM.cs" />
+    <Compile Include="ViewModel\ProcessConfigExportVM.cs" />
+    <Compile Include="ViewModel\ProcessConfigImportVM.cs" />
+    <Compile Include="ViewModel\ProcessConfigViewerVM.cs" />
     <Compile Include="ViewModel\ToolsChildVM.cs" />
     <Compile Include="ViewModel\ToolsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="ViewModel\WIDDestroyVM.cs" />
     <Compile Include="ViewModel\WIDExportVM.cs" />
     <Compile Include="ViewModel\WIDImportVM.cs" />
     <Compile Include="ViewModel\WIDRenameVM.cs" />
@@ -134,7 +139,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UserControls\ServerForm.xaml">
+    <Page Include="UserControls\ToolsForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

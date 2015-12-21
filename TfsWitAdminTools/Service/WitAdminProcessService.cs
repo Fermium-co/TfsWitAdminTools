@@ -1,17 +1,21 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.Service
 {
-    public class DefaultProcessService : IProcessService
+    public class WitAdminProcessService : IWitAdminProcessService
     {
         private readonly Process _process;
+        private readonly string _confirmation = "Yes";
+        public static readonly string WitAdminExecFileName = "witadmin.exe";
 
-        public DefaultProcessService(string argument, IConfigProvider configProvider)
+        public WitAdminProcessService(string argument, bool isConfirmationRequired, IConfigProvider configProvider)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {
-                FileName = configProvider.GetConfig("witAdminExecutableAddress"),
+                FileName = WitAdminExecFileName,
+                WorkingDirectory = configProvider.GetConfig("witAdminExecutableAddress"),
                 Arguments = argument,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,

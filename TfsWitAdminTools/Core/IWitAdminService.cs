@@ -19,17 +19,27 @@ namespace TfsWitAdminTools.Core
 
         string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
 
+        string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
+
         string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
         void ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
         void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        string InvokeCommand(string argument);
+        string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName);
+        
 
-        Task<string[]> InvokeCommandWithSplitedResult(string argument);
+        void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        
 
-        IProcessService CreateProcess(string argument);
+        void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        
+        string InvokeCommand(string argument, bool isConfirmRequired = false);
+
+        Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false);
+
+        IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false);
 
         event EventHandler<CommandInvokedEventArgs> CommandInvoked;
     }

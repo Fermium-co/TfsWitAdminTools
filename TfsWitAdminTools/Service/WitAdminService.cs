@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
@@ -48,9 +49,18 @@ namespace TfsWitAdminTools.Service
 
         public string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName)
         {
-            string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
+            string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
 
-            string result = InvokeCommand(argument);
+            string result = InvokeCommand(argument, true);
+
+            return result;
+        }
+
+        public string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
+        {
+            string argument = string.Format("destroywitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName);
+
+            string result = InvokeCommand(argument, true);
 
             return result;
         }
@@ -74,14 +84,34 @@ namespace TfsWitAdminTools.Service
             string argument = string.Format("importcategories /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
             InvokeCommand(argument);
         }
+        
+        public string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName)
+        {
+            string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);
+            string result = InvokeCommand(argument);
+
+            return result;
+        }
+
+        public void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        {
+            string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
+            InvokeCommand(argument);
+        }
+
+        public void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        {
+            string argument = string.Format("importprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
+            InvokeCommand(argument);
+        }
 
         #endregion
 
         #region CoreMethods
 
-        public virtual string InvokeCommand(string argument)
+        public virtual string InvokeCommand(string argument, bool isConfirmRequired = false)
         {
-            IProcessService process = CreateProcess(argument);
+            IWitAdminProcessService process = CreateProcess(argument);
 
             process.Start();
             //process.WaitForExit();
@@ -96,28 +126,43 @@ namespace TfsWitAdminTools.Service
             return result;
         }
 
-        public Task<string[]> InvokeCommandWithSplitedResult(string argument)
+        public async Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false)
         {
-            return Task.Factory.StartNew<string[]>(() =>
+            CommandInvokedEventArgs eventArg = null;
+
+            string[] results = await Task.Factory.StartNew<string[]>(() =>
             {
-                IProcessService process = CreateProcess(argument);
+                IWitAdminProcessService process = CreateProcess(argument, isConfirmRequired);
                 process.Start();
                 process.WaitForExit();
 
                 List<String> result = new List<string>();
+                StringBuilder resultText = new StringBuilder();
                 while (!process.IsEndOfStream())
                 {
-                    result.Add(process.ReadLine());
+                    var resultItem = process.ReadLine();
+
+                    result.Add(resultItem);
+
+                    resultText.AppendLine(resultItem);
                 }
+
+                eventArg = new CommandInvokedEventArgs();
+                eventArg.Argument = argument;
+                eventArg.Output = resultText.ToString();
 
                 return result.ToArray();
             });
+
+            OnCommandInvoked(eventArg);
+
+            return results;
         }
 
-        public virtual IProcessService CreateProcess(string argument)
+        public virtual IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false)
         {
-            var p = DiManager.Current.Resolve<IProcessService>(new { argument = argument });
-            return p;
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument, isConfirmationRequired = isConfirmationRequired });
+            return process;
         }
 
         #endregion
@@ -131,7 +176,8 @@ namespace TfsWitAdminTools.Service
         protected virtual void OnCommandInvoked(CommandInvokedEventArgs e)
         {
             if (CommandInvoked != null)
-                CommandInvoked(this, e);
+                System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(CommandInvoked, this, e);
+                //CommandInvoked(this, e);
         }
 
         #endregion

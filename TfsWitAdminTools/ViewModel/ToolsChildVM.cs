@@ -6,23 +6,23 @@ namespace TfsWitAdminTools.ViewModel
     {
         #region Ctor
 
-        public ToolsChildVM(ToolsVM server)
+        public ToolsChildVM(ToolsVM tools)
         {
-            this.Server = server;
+            this.Tools = tools;
         }
 
         #endregion
 
         #region Props
 
-        private ToolsVM _server;
+        private ToolsVM _tools;
 
-        public ToolsVM Server
+        public ToolsVM Tools
         {
-            get { return _server; }
+            get { return _tools; }
             set
             {
-                Set(ref _server, value);
+                Set(ref _tools, value);
             }
         }
 
@@ -30,7 +30,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             get
             {
-                return Server.TFManager;
+                return Tools.TFManager;
             }
         }
 
