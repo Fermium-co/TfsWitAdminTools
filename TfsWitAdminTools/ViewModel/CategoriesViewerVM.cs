@@ -1,4 +1,5 @@
 ﻿
+using System.Threading.Tasks;
 namespace TfsWitAdminTools.ViewModel
 {
     public class CategoriesViewerVM : ToolsChildVM
@@ -8,13 +9,13 @@ namespace TfsWitAdminTools.ViewModel
         public CategoriesViewerVM(ToolsVM tools)
             : base(tools)
         {
-            ShowCommand = new DelegateCommand(() =>
+            ShowCommand = new DelegateCommand(async () =>
             {
-                Show();
+                await Show();
             },
             () =>
                 (
-                Tools.CurrentProjectCollection != null && 
+                Tools.CurrentProjectCollection != null &&
                 Tools.CurrentTeamProject != null
                 )
             );
@@ -28,11 +29,11 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private void Show()
+        private async Task Show()
         {
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
-            string categories = Tools.WIAdminService
+            string categories = await Tools.WIAdminService
                 .ExportCategories(TFManager, projectCollectionName, teamProjectName);
 
             Tools.CurrentTeamProject.Categories = categories;

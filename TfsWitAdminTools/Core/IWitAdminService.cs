@@ -10,32 +10,32 @@ namespace TfsWitAdminTools.Core
     {
         Task<string[]> ExportWorkItemTypes(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
-        string ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
+        Task<string> ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
 
-        void ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName,
+        Task ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName,
             string fileName);
 
-        void ImportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        Task ImportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
+        Task<string> RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName);
 
-        string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
+        Task<string> DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName);
 
-        string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName);
+        Task<string> ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName);
 
-        void ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        Task ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+        Task ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
 
-        string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName);
+        Task<string> ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName);
+
+
+        Task ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
+
+
+        Task ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
         
-
-        void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
-        
-
-        void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName);
-        
-        string InvokeCommand(string argument, bool isConfirmRequired = false);
+        Task<string> InvokeCommand(string argument, bool isConfirmRequired = false);
 
         Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false);
 

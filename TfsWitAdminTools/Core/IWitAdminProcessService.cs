@@ -10,7 +10,7 @@ namespace TfsWitAdminTools.Core
 {
     public interface IWitAdminProcessService
     {
-        void Start();
+        Task Start();
         void WaitForExit();
         string ReadToEnd();
         string ReadLine();

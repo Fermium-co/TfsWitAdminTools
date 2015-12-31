@@ -68,7 +68,7 @@ namespace TfsWitAdminTools.ViewModel
                 string teamProjectName = teamProject.Name;
                 string workItemTypeName = Tools.CurrentWorkItemType.Name;
 
-                Tools.WIAdminService.DestroyWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
+                await Tools.WIAdminService.DestroyWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
             }
         }
 

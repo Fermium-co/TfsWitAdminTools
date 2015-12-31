@@ -85,7 +85,7 @@ namespace TfsWitAdminTools.ViewModel
         private async Task Import()
         {
             TeamProjectInfo[] teamProjects = null;
-            if(IsAllTeamProjects)
+            if (IsAllTeamProjects)
                 teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
             else
                 teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
@@ -95,7 +95,7 @@ namespace TfsWitAdminTools.ViewModel
                 string projectCollectionName = Tools.CurrentProjectCollection.Name;
                 string teamProjectName = teamProject.Name;
 
-                Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName,teamProjectName, 
+                await Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                     FileName);
             }
         }

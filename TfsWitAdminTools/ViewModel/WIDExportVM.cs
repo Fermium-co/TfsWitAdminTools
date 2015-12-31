@@ -133,7 +133,7 @@ namespace TfsWitAdminTools.ViewModel
                     workItemTypeInfos = new WorkItemTypeInfo[] { Tools.CurrentWorkItemType };
 
                 foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
-                    Export(projectCollection, teamProject, workItemTypeInfo, path);
+                    await Export(projectCollection, teamProject, workItemTypeInfo, path);
             }
         }
 
@@ -146,7 +146,7 @@ namespace TfsWitAdminTools.ViewModel
             string fileName = string.Format("{0}.xml", workItemTypeName);
             string fullPath = System.IO.Path.Combine(path, fileName);
 
-            Tools.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
+            await Tools.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                 workItemTypeName, fullPath);
         }
 
