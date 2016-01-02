@@ -26,97 +26,109 @@ namespace TfsWitAdminTools.Service
             return workItemTypes;
         }
 
-        public string ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
+        public async Task<string> ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
         {
             string argument = string.Format("exportwitd /collection:{0}/{1} /p:{2} /n:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName);
 
-            string workItemDefenition = InvokeCommand(argument);
+            string workItemDefenition = await InvokeCommand(argument);
 
             return workItemDefenition;
         }
 
-        public void ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string fileName)
+        public async Task ExportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string fileName)
         {
             string argument = string.Format("exportwitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /f:\"{4}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
 
-        public void ImportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        public async Task ImportWorkItemDefenition(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
         {
             string argument = string.Format("importwitd /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
 
-        public string RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName)
+        public async Task<string> RenameWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName, string newName)
         {
             string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
 
-            string result = InvokeCommand(argument, true);
+            string result = await InvokeCommand(argument, true);
 
             return result;
         }
 
-        public string DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
+        public async Task<string> DestroyWorkItem(ITFManager tfManager, string projectCollectionName, string teamProjectName, string workItemTypeName)
         {
             string argument = string.Format("destroywitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName);
 
-            string result = InvokeCommand(argument, true);
+            string result = await InvokeCommand(argument, true);
 
             return result;
         }
 
-        public string ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName)
+        public async Task<string> ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName)
         {
             string argument = string.Format("exportcategories /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);
-            string result = InvokeCommand(argument);
+            string result = await InvokeCommand(argument);
 
             return result;
         }
 
-        public void ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        public async Task ExportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
         {
             string argument = string.Format("exportcategories /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
 
-        public void ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        public async Task ImportCategories(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
         {
             string argument = string.Format("importcategories /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
-        
-        public string ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName)
+
+        public async Task<string> ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName)
         {
             string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);
-            string result = InvokeCommand(argument);
+            string result = await InvokeCommand(argument);
 
             return result;
         }
 
-        public void ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        public async Task ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
         {
             string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
 
-        public void ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
+        public async Task ImportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName, string fileName)
         {
             string argument = string.Format("importprocessconfig /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
-            InvokeCommand(argument);
+            await InvokeCommand(argument);
         }
 
         #endregion
 
         #region CoreMethods
 
-        public virtual string InvokeCommand(string argument, bool isConfirmRequired = false)
+        public virtual async Task<string> InvokeCommand(string argument, bool isConfirmRequired = false)
+        {
+            string result = await RunProcess(argument);
+
+            return result;
+        }
+
+        private async Task<string> RunProcess(string argument)
         {
             IWitAdminProcessService process = CreateProcess(argument);
 
-            process.Start();
+            await process.Start();
             //process.WaitForExit();
 
-            string result = process.ReadToEnd();
+            string result = null;
+            var errorMessage = process.ReadError();
+            if (string.IsNullOrEmpty(errorMessage))
+                result = process.ReadToEnd();
+            else
+                result = string.Format("Error : \n{0}", errorMessage);
 
             CommandInvokedEventArgs eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
@@ -128,16 +140,24 @@ namespace TfsWitAdminTools.Service
 
         public async Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false)
         {
+            string[] results = await RunProcessWithSplitedResult(argument, isConfirmRequired);
+
+            return results;
+        }
+
+        private async Task<string[]> RunProcessWithSplitedResult(string argument, bool isConfirmRequired)
+        {
             CommandInvokedEventArgs eventArg = null;
 
-            string[] results = await Task.Factory.StartNew<string[]>(() =>
-            {
-                IWitAdminProcessService process = CreateProcess(argument, isConfirmRequired);
-                process.Start();
-                process.WaitForExit();
+            IWitAdminProcessService process = CreateProcess(argument, isConfirmRequired);
+            await process.Start();
+            process.WaitForExit();
 
-                List<String> result = new List<string>();
-                StringBuilder resultText = new StringBuilder();
+            List<String> result = new List<string>();
+            var errorMessage = process.ReadError();
+            StringBuilder resultText = new StringBuilder();
+            if (string.IsNullOrEmpty(errorMessage))
+            {
                 while (!process.IsEndOfStream())
                 {
                     var resultItem = process.ReadLine();
@@ -146,17 +166,16 @@ namespace TfsWitAdminTools.Service
 
                     resultText.AppendLine(resultItem);
                 }
+            }
+            else
+                resultText.AppendLine(string.Format("Error : \n{0}", errorMessage));
 
-                eventArg = new CommandInvokedEventArgs();
-                eventArg.Argument = argument;
-                eventArg.Output = resultText.ToString();
-
-                return result.ToArray();
-            });
-
+            eventArg = new CommandInvokedEventArgs();
+            eventArg.Argument = argument;
+            eventArg.Output = resultText.ToString();
             OnCommandInvoked(eventArg);
 
-            return results;
+            return result.ToArray();
         }
 
         public virtual IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false)
@@ -177,7 +196,6 @@ namespace TfsWitAdminTools.Service
         {
             if (CommandInvoked != null)
                 System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(CommandInvoked, this, e);
-                //CommandInvoked(this, e);
         }
 
         #endregion

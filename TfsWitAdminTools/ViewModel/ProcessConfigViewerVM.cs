@@ -13,13 +13,13 @@ namespace TfsWitAdminTools.ViewModel
         public ProcessConfigViewerVM(ToolsVM tools)
             : base(tools)
         {
-            ShowCommand = new DelegateCommand(() =>
+            ShowCommand = new DelegateCommand(async () =>
             {
-                Show();
+                await Show();
             },
             () =>
                 (
-                Tools.CurrentProjectCollection != null && 
+                Tools.CurrentProjectCollection != null &&
                 Tools.CurrentTeamProject != null
                 )
             );
@@ -33,11 +33,11 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private void Show()
+        private async Task Show()
         {
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
-            string processConfigs = Tools.WIAdminService
+            string processConfigs = await Tools.WitAdminService
                 .ExportProcessConfig(TFManager, projectCollectionName, teamProjectName);
 
             Tools.CurrentTeamProject.ProcessConfig = processConfigs;

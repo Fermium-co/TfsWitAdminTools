@@ -86,20 +86,20 @@ namespace TfsWitAdminTools.ViewModel
             ProjectCollectionInfo projectCollection = Tools.CurrentProjectCollection;
             TeamProjectInfo[] teamProjects;
 
-            teamProjects = (IsAllTeamProjects) 
+            teamProjects = (IsAllTeamProjects)
                 ? projectCollection.TeamProjectInfos
                 : new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
             foreach (TeamProjectInfo teamProject in teamProjects)
-                Import(projectCollection, teamProject, FileName);
+                await Import(projectCollection, teamProject, FileName);
         }
 
-        private void Import(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, string fileName)
+        private async Task Import(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, string fileName)
         {
             string projectCollectionName = projectCollection.Name;
             string teamProjectName = teamProject.Name;
 
-            Tools.WIAdminService.ImportProcessConfig(TFManager, projectCollectionName, teamProjectName, fileName);
+            await Tools.WitAdminService.ImportProcessConfig(TFManager, projectCollectionName, teamProjectName, fileName);
         }
 
         #endregion

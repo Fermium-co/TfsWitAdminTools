@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.Service
@@ -31,6 +32,13 @@ namespace TfsWitAdminTools.Service
             this._process = process;
         }
 
+        public string ReadError()
+        {
+            string errorMessage = null ;
+            errorMessage = _process.StandardError.ReadToEnd();
+            return errorMessage;
+        }
+
         public bool IsEndOfStream()
         {
             return _process.StandardOutput.EndOfStream;
@@ -46,9 +54,9 @@ namespace TfsWitAdminTools.Service
             return _process.StandardOutput.ReadToEnd();
         }
 
-        public void Start()
+        public async Task Start()
         {
-            _process.Start();
+            await Task.Run(() => _process.Start());
         }
 
         public void WaitForExit()

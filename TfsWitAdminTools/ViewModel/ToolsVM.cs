@@ -21,7 +21,7 @@ namespace TfsWitAdminTools.ViewModel
 
         private void Init(IWitAdminService wiAdminService)
         {
-            this.WIAdminService = wiAdminService;
+            this.WitAdminService = wiAdminService;
 
             TargetTemplateName = "Agile";
 
@@ -49,15 +49,15 @@ namespace TfsWitAdminTools.ViewModel
             () => TFManager != null
             );
 
-            GetAllTeamProjectsWITypesCommand = new DelegateCommand(() =>
+            GetAllTeamProjectsWITypesCommand = new DelegateCommand(async () =>
             {
-                GetAllTeamProjectsWITypes();
+                await GetAllTeamProjectsWITypes();
             }, () => CurrentProjectCollection != null);
 
-            GetWITypesCommand = new DelegateCommand(() =>
+            GetWITypesCommand = new DelegateCommand(async () =>
             {
                 TeamProjectInfo currentTeamProject = CurrentTeamProject;
-                GetWITypes(currentTeamProject);
+                await GetWITypes(currentTeamProject);
             },
             () => (CurrentProjectCollection != null && CurrentTeamProject != null));
 
@@ -385,7 +385,7 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Service Props
 
-        public IWitAdminService WIAdminService { get; private set; }
+        public IWitAdminService WitAdminService { get; private set; }
 
         public ITFManager TFManager { get; private set; }
 
@@ -431,15 +431,24 @@ namespace TfsWitAdminTools.ViewModel
 
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
-            string projectCollectionName = CurrentProjectCollection.Name;
-            string teamProjectName = teamProject.Name;
+            try
+            {
+                BeginWorking();
 
-            var workItemTypeInfos =
-                (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
-                .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
-                .ToArray();
+                string projectCollectionName = CurrentProjectCollection.Name;
+                string teamProjectName = teamProject.Name;
 
-            teamProject.WorkItemTypeInfos = workItemTypeInfos;
+                var workItemTypeInfos =
+                    (await WitAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
+                    .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
+                    .ToArray();
+
+                teamProject.WorkItemTypeInfos = workItemTypeInfos;
+            }
+            finally
+            {
+                EndWorking();
+            }
         }
 
         public void BeginWorking([CallerMemberName]string callerMethodName = null)

@@ -99,10 +99,10 @@ namespace TfsWitAdminTools.ViewModel
                 : new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
             foreach (TeamProjectInfo teamProject in teamProjects)
-                Export(projectCollection, teamProject, Path);
+                await Export(projectCollection, teamProject, Path);
         }
 
-        private void Export(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, string path)
+        private async Task Export(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, string path)
         {
             string projectCollectionName = projectCollection.Name;
             string teamProjectName = teamProject.Name;
@@ -110,7 +110,7 @@ namespace TfsWitAdminTools.ViewModel
             string fileName = string.Format("{0}.xml", teamProjectName);
             string fullPath = System.IO.Path.Combine(path, fileName);
 
-            Tools.WIAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
+            await Tools.WitAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
         }
 
         #endregion
