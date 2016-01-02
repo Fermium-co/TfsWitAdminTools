@@ -110,7 +110,7 @@ namespace TfsWitAdminTools.ViewModel
             string fileName = string.Format("{0}.xml", teamProjectName);
             string fullPath = System.IO.Path.Combine(path, fileName);
 
-            await Tools.WIAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
+            await Tools.WitAdminService.ExportCategories(TFManager, projectCollectionName, teamProjectName, fullPath);
         }
 
         #endregion

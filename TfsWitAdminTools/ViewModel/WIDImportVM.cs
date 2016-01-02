@@ -95,7 +95,7 @@ namespace TfsWitAdminTools.ViewModel
                 string projectCollectionName = Tools.CurrentProjectCollection.Name;
                 string teamProjectName = teamProject.Name;
 
-                await Tools.WIAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
+                await Tools.WitAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                     FileName);
             }
         }

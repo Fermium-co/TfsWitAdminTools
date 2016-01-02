@@ -21,7 +21,7 @@ namespace TfsWitAdminTools.ViewModel
 
         private void Init(IWitAdminService wiAdminService)
         {
-            this.WIAdminService = wiAdminService;
+            this.WitAdminService = wiAdminService;
 
             TargetTemplateName = "Agile";
 
@@ -385,7 +385,7 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Service Props
 
-        public IWitAdminService WIAdminService { get; private set; }
+        public IWitAdminService WitAdminService { get; private set; }
 
         public ITFManager TFManager { get; private set; }
 
@@ -439,7 +439,7 @@ namespace TfsWitAdminTools.ViewModel
                 string teamProjectName = teamProject.Name;
 
                 var workItemTypeInfos =
-                    (await WIAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
+                    (await WitAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
                     .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
                     .ToArray();
 

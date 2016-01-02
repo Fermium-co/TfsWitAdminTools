@@ -29,7 +29,7 @@ namespace TfsWitAdminTools.ViewModel
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
             string workItemTypeName = Tools.CurrentWorkItemType.Name;
-            string workItemTypeDefenition = await Tools.WIAdminService
+            string workItemTypeDefenition = await Tools.WitAdminService
                 .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
 
             Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;

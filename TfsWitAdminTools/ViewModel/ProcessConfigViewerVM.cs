@@ -37,7 +37,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
-            string processConfigs = await Tools.WIAdminService
+            string processConfigs = await Tools.WitAdminService
                 .ExportProcessConfig(TFManager, projectCollectionName, teamProjectName);
 
             Tools.CurrentTeamProject.ProcessConfig = processConfigs;

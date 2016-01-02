@@ -12,6 +12,7 @@ namespace TfsWitAdminTools.Core
     {
         Task Start();
         void WaitForExit();
+        string ReadError();
         string ReadToEnd();
         string ReadLine();
         bool IsEndOfStream();

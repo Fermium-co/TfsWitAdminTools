@@ -32,6 +32,13 @@ namespace TfsWitAdminTools.Service
             this._process = process;
         }
 
+        public string ReadError()
+        {
+            string errorMessage = null ;
+            errorMessage = _process.StandardError.ReadToEnd();
+            return errorMessage;
+        }
+
         public bool IsEndOfStream()
         {
             return _process.StandardOutput.EndOfStream;

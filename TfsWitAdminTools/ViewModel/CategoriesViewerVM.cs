@@ -33,7 +33,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
-            string categories = await Tools.WIAdminService
+            string categories = await Tools.WitAdminService
                 .ExportCategories(TFManager, projectCollectionName, teamProjectName);
 
             Tools.CurrentTeamProject.Categories = categories;

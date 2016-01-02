@@ -84,7 +84,7 @@ namespace TfsWitAdminTools.Service
             string argument = string.Format("importcategories /collection:{0}/{1} /p:{2} /f:\"{3}\"", tfManager.TfsAddress, projectCollectionName, teamProjectName, fileName);
             await InvokeCommand(argument);
         }
-        
+
         public async Task<string> ExportProcessConfig(ITFManager tfManager, string projectCollectionName, string teamProjectName)
         {
             string argument = string.Format("exportprocessconfig /collection:{0}/{1} /p:{2}", tfManager.TfsAddress, projectCollectionName, teamProjectName);
@@ -123,12 +123,18 @@ namespace TfsWitAdminTools.Service
             await process.Start();
             //process.WaitForExit();
 
-            string result = process.ReadToEnd();
+            string result = null;
+            var errorMessage = process.ReadError();
+            if (string.IsNullOrEmpty(errorMessage))
+                result = process.ReadToEnd();
+            else
+                result = string.Format("Error : \n{0}", errorMessage);
 
             CommandInvokedEventArgs eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
             eventArg.Output = result;
             OnCommandInvoked(eventArg);
+
             return result;
         }
 
@@ -148,20 +154,25 @@ namespace TfsWitAdminTools.Service
             process.WaitForExit();
 
             List<String> result = new List<string>();
+            var errorMessage = process.ReadError();
             StringBuilder resultText = new StringBuilder();
-            while (!process.IsEndOfStream())
+            if (string.IsNullOrEmpty(errorMessage))
             {
-                var resultItem = process.ReadLine();
+                while (!process.IsEndOfStream())
+                {
+                    var resultItem = process.ReadLine();
 
-                result.Add(resultItem);
+                    result.Add(resultItem);
 
-                resultText.AppendLine(resultItem);
+                    resultText.AppendLine(resultItem);
+                }
             }
+            else
+                resultText.AppendLine(string.Format("Error : \n{0}", errorMessage));
 
             eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
             eventArg.Output = resultText.ToString();
-
             OnCommandInvoked(eventArg);
 
             return result.ToArray();
@@ -185,7 +196,6 @@ namespace TfsWitAdminTools.Service
         {
             if (CommandInvoked != null)
                 System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(CommandInvoked, this, e);
-                //CommandInvoked(this, e);
         }
 
         #endregion

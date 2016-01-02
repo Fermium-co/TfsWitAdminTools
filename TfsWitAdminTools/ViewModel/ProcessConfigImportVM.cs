@@ -99,7 +99,7 @@ namespace TfsWitAdminTools.ViewModel
             string projectCollectionName = projectCollection.Name;
             string teamProjectName = teamProject.Name;
 
-            await Tools.WIAdminService.ImportProcessConfig(TFManager, projectCollectionName, teamProjectName, fileName);
+            await Tools.WitAdminService.ImportProcessConfig(TFManager, projectCollectionName, teamProjectName, fileName);
         }
 
         #endregion

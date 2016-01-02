@@ -146,7 +146,7 @@ namespace TfsWitAdminTools.ViewModel
             string fileName = string.Format("{0}.xml", workItemTypeName);
             string fullPath = System.IO.Path.Combine(path, fileName);
 
-            await Tools.WIAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
+            await Tools.WitAdminService.ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
                 workItemTypeName, fullPath);
         }
 
