@@ -21,7 +21,7 @@ namespace TfsWitAdminTools.ViewModel
 
         private void Init(IWitAdminService wiAdminService)
         {
-            this.WitAdminService = wiAdminService;
+            WitAdminService = wiAdminService;
 
             TargetTemplateName = "Agile";
 
@@ -30,8 +30,8 @@ namespace TfsWitAdminTools.ViewModel
             SetAddressCommand = new DelegateCommand(() =>
             {
                 TFManager = DiManager.Current.Resolve<ITFManager>(new { serverAddress = Address });
-                GetProjectCollectionInfosCommand.Execute(this);
                 InitChildViewModelsCommand.Execute(this);
+                GetProjectCollectionInfosCommand.Execute(this);
             },
             () => !string.IsNullOrEmpty(Address)
             );
@@ -42,9 +42,9 @@ namespace TfsWitAdminTools.ViewModel
                 ProjectCollectionInfos = null;
             });
 
-            GetProjectCollectionInfosCommand = new DelegateCommand(() =>
+            GetProjectCollectionInfosCommand = new DelegateCommand(async () =>
             {
-                ProjectCollectionInfos = GetProjectCollectionInfos(TFManager);
+                ProjectCollectionInfos = await GetProjectCollectionInfos(TFManager);
             },
             () => TFManager != null
             );
@@ -63,6 +63,8 @@ namespace TfsWitAdminTools.ViewModel
 
             InitChildViewModelsCommand = new DelegateCommand(() =>
             {
+                Progress = DiManager.Current.Resolve<ProgressVM>(new { tools = this });
+
                 WIDViewer = DiManager.Current.Resolve<WIDViewerVM>(new { tools = this });
                 WIDExport = DiManager.Current.Resolve<WIDExportVM>(new { tools = this });
                 WIDImport = DiManager.Current.Resolve<WIDImportVM>(new { tools = this });
@@ -97,8 +99,6 @@ namespace TfsWitAdminTools.ViewModel
         #endregion
 
         #region Firalds and Props
-
-        private List<string> _currentWorks = new List<string>();
 
         #region Address
 
@@ -165,7 +165,7 @@ namespace TfsWitAdminTools.ViewModel
             get { return _currentTeamProject; }
             set
             {
-                if (Set(ref  _currentTeamProject, value))
+                if (Set(ref _currentTeamProject, value))
                     RaiseCommandsCanExecute();
             }
         }
@@ -181,7 +181,7 @@ namespace TfsWitAdminTools.ViewModel
             get { return _currentWorkItemType; }
             set
             {
-                if (Set(ref  _currentWorkItemType, value))
+                if (Set(ref _currentWorkItemType, value))
                     RaiseCommandsCanExecute();
             }
         }
@@ -204,28 +204,23 @@ namespace TfsWitAdminTools.ViewModel
 
         #endregion
 
-        #region IsWorrking
-
-        private bool _isWorrking;
-
-        private bool IsWorrking
-        {
-            get { return _isWorrking; }
-            set
-            {
-                if (Set(ref _isWorrking, value))
-                    ClearOutputCommand.RaiseCanExecuteChanged();
-
-                Mouse.OverrideCursor = (_isWorrking == true)
-                    ? Cursors.Wait : null;
-            }
-        }
-
-        #endregion
-
         #endregion
 
         #region View Models
+
+        private ProgressVM _progress;
+
+        public ProgressVM Progress
+        {
+            get { return _progress; }
+            set
+            {
+                if (Set(ref _progress, value))
+                {
+                    RaiseCommandsCanExecute();
+                }
+            }
+        }
 
         private WIDViewerVM _wiDViewer;
 
@@ -393,19 +388,33 @@ namespace TfsWitAdminTools.ViewModel
 
         #region Methods
 
-        private List<ProjectCollectionInfo> GetProjectCollectionInfos(ITFManager tfManager)
+        private async Task<List<ProjectCollectionInfo>> GetProjectCollectionInfos(ITFManager tfManager)
         {
-            var projectCollections = tfManager.ProjectCollections;
-            var teamProjects = tfManager.TeamProjects;
             var projectCollectionInfos = new List<ProjectCollectionInfo>();
-            foreach (var projectCollection in projectCollections)
+            Progress.BeginWorking();
+            try
             {
-                var teamProjectInfos = teamProjects[projectCollection.Key]
-                    .Select(teamProjectItem =>
-                        new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null, ProcessConfig = null }
-                        ).ToArray();
-                var projColInfo = new ProjectCollectionInfo() { Name = projectCollection.Key, TeamProjectInfos = teamProjectInfos };
-                projectCollectionInfos.Add(projColInfo);
+                await Task.Run(() =>
+                {
+                    var projectCollections = tfManager.ProjectCollections;
+                    var teamProjects = tfManager.TeamProjects;
+
+                    foreach (var projectCollection in projectCollections)
+                    {
+                        var teamProjectInfos = teamProjects[projectCollection.Key]
+                            .Select(teamProjectItem =>
+                                new TeamProjectInfo() { Name = teamProjectItem.Name, WorkItemTypeInfos = null, Categories = null, ProcessConfig = null }
+                                ).ToArray();
+                        var projColInfo = new ProjectCollectionInfo() { Name = projectCollection.Key, TeamProjectInfos = teamProjectInfos };
+                        projectCollectionInfos.Add(projColInfo);
+                    }
+                });
+
+                Progress.NextStep();
+            }
+            finally
+            {
+                Progress.EndWorking();
             }
 
             return projectCollectionInfos.ToList();
@@ -415,62 +424,55 @@ namespace TfsWitAdminTools.ViewModel
         {
             try
             {
-                BeginWorking();
-
                 TeamProjectInfo[] teamProjects = CurrentProjectCollection.TeamProjectInfos;
+                Progress.BeginWorking(teamProjects.Length);
                 foreach (var teamProject in teamProjects)
                 {
-                    await GetWITypes(teamProject);
+                    try
+                    {
+                        await GetWITypes(teamProject);
+                        Progress.NextStep();
+                    }
+                    catch (WitAdminException)
+                    {
+                        Progress.FailStep();
+                    }
                 }
             }
+
             finally
             {
-                EndWorking();
+                Progress.EndWorking();
             }
         }
 
         private async Task GetWITypes(TeamProjectInfo teamProject)
         {
+            string projectCollectionName = CurrentProjectCollection.Name;
+            string teamProjectName = teamProject.Name;
+            WorkItemTypeInfo[] workItemTypeInfos = null;
+
+            Progress.BeginWorking();
             try
             {
-                BeginWorking();
-
-                string projectCollectionName = CurrentProjectCollection.Name;
-                string teamProjectName = teamProject.Name;
-
-                var workItemTypeInfos =
+                try
+                {
+                    workItemTypeInfos =
                     (await WitAdminService.ExportWorkItemTypes(TFManager, projectCollectionName, teamProjectName))
-                    .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
-                    .ToArray();
+                        .Select(workItemTypeString => new WorkItemTypeInfo() { Name = workItemTypeString, Defenition = null })
+                        .ToArray();
+                    Progress.NextStep();
+                }
+                catch (WitAdminException)
+                {
+                    Progress.FailStep();
+                }
 
                 teamProject.WorkItemTypeInfos = workItemTypeInfos;
             }
             finally
             {
-                EndWorking();
-            }
-        }
-
-        public void BeginWorking([CallerMemberName]string callerMethodName = null)
-        {
-            if (IsWorrking == false)
-                IsWorrking = true;
-
-            if (callerMethodName != null)
-                _currentWorks.Add(callerMethodName);
-        }
-
-        public void EndWorking([CallerMemberName]string callerMethodName = null)
-        {
-            if (callerMethodName != null)
-            {
-                int index;
-                index = _currentWorks.IndexOf(callerMethodName);
-                if (index != -1)
-                    _currentWorks.RemoveAt(index);
-
-                if (!_currentWorks.Any())
-                    IsWorrking = false;
+                Progress.EndWorking();
             }
         }
 
@@ -531,7 +533,7 @@ namespace TfsWitAdminTools.ViewModel
 
         void wiAdminService_CommandInvoked(object sender, CommandInvokedEventArgs e)
         {
-            Output += string.Format("Command:\n{0}\nResult:\n{1}\n\n", e.Argument, e.Output);
+            Output += string.Format("Command:\n{0}\nResult:\n{1}\n", e.Argument, e.Output);
         }
 
         #endregion

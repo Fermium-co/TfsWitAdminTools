@@ -8,10 +8,9 @@ namespace TfsWitAdminTools.Service
     public class WitAdminProcessService : IWitAdminProcessService
     {
         private readonly Process _process;
-        private readonly string _confirmation = "Yes";
         public static readonly string WitAdminExecFileName = "witadmin.exe";
 
-        public WitAdminProcessService(string argument, bool isConfirmationRequired, IConfigProvider configProvider)
+        public WitAdminProcessService(string argument, IConfigProvider configProvider)
         {
             ProcessStartInfo startInfo = new ProcessStartInfo()
             {

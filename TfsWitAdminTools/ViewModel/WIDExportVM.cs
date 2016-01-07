@@ -25,16 +25,7 @@ namespace TfsWitAdminTools.ViewModel
 
             ExportCommand = new DelegateCommand(async () =>
             {
-                try
-                {
-                    Tools.BeginWorking();
-
-                    await Export();
-                }
-                finally
-                {
-                    Tools.EndWorking();
-                }
+                await Export();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -132,8 +123,26 @@ namespace TfsWitAdminTools.ViewModel
                 else
                     workItemTypeInfos = new WorkItemTypeInfo[] { Tools.CurrentWorkItemType };
 
-                foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
-                    await Export(projectCollection, teamProject, workItemTypeInfo, path);
+                Tools.Progress.BeginWorking(workItemTypeInfos.Length);
+                try
+                {
+                    foreach (WorkItemTypeInfo workItemTypeInfo in workItemTypeInfos)
+                    {
+                        try
+                        {
+                            await Export(projectCollection, teamProject, workItemTypeInfo, path);
+                            Tools.Progress.NextStep();
+                        }
+                        catch (WitAdminException)
+                        {
+                            Tools.Progress.FailStep();
+                        }
+                    }
+                }
+                finally
+                {
+                    Tools.Progress.EndWorking();
+                }
             }
         }
 

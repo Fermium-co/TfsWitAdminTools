@@ -20,7 +20,7 @@ namespace TfsWitAdminTools.ViewModel
         public ToolsVM Tools
         {
             get { return _tools; }
-            set
+            private set
             {
                 Set(ref _tools, value);
             }

@@ -69,8 +69,10 @@
       <HintPath>..\packages\Microsoft.WindowsAPICodePack.Shell.1.1.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
@@ -78,8 +80,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DialogProvider.cs" />
+    <Compile Include="ExceptionExt.cs" />
     <Compile Include="IDialogProvider.cs" />
     <Compile Include="ITFManager.cs" />
+    <Compile Include="LogFileTools.cs" />
+    <Compile Include="MessageBoxTools.cs" />
     <Compile Include="Messages.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyNotifyObject.cs" />

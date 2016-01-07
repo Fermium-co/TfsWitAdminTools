@@ -18,7 +18,7 @@ namespace TfsWitAdminTools.Tests
 
             Mock<WitAdminService> witAdminService = new Mock<WitAdminService>(configProvider.Object);
 
-            witAdminService.Setup(w => w.InvokeCommand(It.IsAny<string>(), false)).Verifiable();
+            witAdminService.Setup(w => w.InvokeCommand(It.IsAny<string>())).Verifiable();
 
             Mock<ITFManager> tfManager = new Mock<ITFManager>();
 
@@ -30,7 +30,7 @@ namespace TfsWitAdminTools.Tests
 
             witAdminService.Object.ExportWorkItemDefenition(tfManager.Object, "Test", "Test", "Test");
 
-            witAdminService.Verify(w => w.InvokeCommand("exportwitd /collection:/Test /p:Test /n:\"Test\"", false), Times.Once());
+            witAdminService.Verify(w => w.InvokeCommand("exportwitd /collection:/Test /p:Test /n:\"Test\""), Times.Once());
         }
     }
 }

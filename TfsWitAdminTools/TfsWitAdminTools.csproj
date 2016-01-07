@@ -90,9 +90,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Core\CommandInvokedEventArgs.cs" />
+    <Compile Include="Core\DataContextInitException.cs" />
     <Compile Include="Core\IConfigProvider.cs" />
+    <Compile Include="Core\IProgressService.cs" />
     <Compile Include="Core\IWitAdminProcessService.cs" />
+    <Compile Include="Core\ProgressFinishedEventArgs.cs" />
     <Compile Include="Service\ConfigProvider.cs" />
+    <Compile Include="Core\WitAdminException.cs" />
+    <Compile Include="Service\ProgressService.cs" />
     <Compile Include="Service\WitAdminProcessService.cs" />
     <Compile Include="Service\TFServerService.cs" />
     <Compile Include="Service\WitAdminService.cs" />
@@ -111,6 +117,7 @@
     <Compile Include="ViewModel\ProcessConfigExportVM.cs" />
     <Compile Include="ViewModel\ProcessConfigImportVM.cs" />
     <Compile Include="ViewModel\ProcessConfigViewerVM.cs" />
+    <Compile Include="ViewModel\ProgressVM.cs" />
     <Compile Include="ViewModel\ToolsChildVM.cs" />
     <Compile Include="ViewModel\ToolsVM.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
