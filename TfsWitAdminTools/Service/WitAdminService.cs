@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
@@ -124,9 +125,9 @@ namespace TfsWitAdminTools.Service
             process.WaitForExit();
 
             string result = null;
-            var errorMessage = process.ReadError();
+            var errorMessage = process.Error;
             if (string.IsNullOrEmpty(errorMessage))
-                result = process.ReadToEnd();
+                result = process.Output;
             else
             {
                 errorMessage = string.Format("Error : \n{0}", errorMessage);
@@ -160,18 +161,12 @@ namespace TfsWitAdminTools.Service
             process.WaitForExit();
 
             List<String> result = new List<string>();
-            var errorMessage = process.ReadError();
+            var errorMessage = process.Error;
             StringBuilder resultText = new StringBuilder();
             if (string.IsNullOrEmpty(errorMessage))
             {
-                while (!process.IsEndOfStream())
-                {
-                    var resultItem = process.ReadLine();
-
-                    result.Add(resultItem);
-
-                    resultText.AppendLine(resultItem);
-                }
+                result = process.SplitedOutput;
+                resultText.AppendLine(process.Output);
             }
             else
             {
@@ -182,6 +177,7 @@ namespace TfsWitAdminTools.Service
             eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
             eventArg.Output = resultText.ToString();
+            eventArg.Output = process.Output;
             OnCommandInvoked(eventArg);
 
             if (!string.IsNullOrEmpty(errorMessage))
@@ -192,7 +188,7 @@ namespace TfsWitAdminTools.Service
 
         public virtual IWitAdminProcessService CreateProcess(string argument)
         {
-            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument});
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument });
             return process;
         }
 

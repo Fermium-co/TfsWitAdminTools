@@ -100,9 +100,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="witadmin">
-      <HintPath>..\..\..\..\Documents\Visual Studio 2015\Samples\WpfApplication1\WpfApplication1\ExternalBin\TF\witadmin.exe</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">

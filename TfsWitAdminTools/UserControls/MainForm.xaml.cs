@@ -19,14 +19,12 @@ namespace TfsWitAdminTools.UserControls
         {
             var tempMessage = string.Empty;
 
-            var initContextIsFailed = false;
             try
             {
                 DataContext = DiManager.Current.Resolve<MainVM>();
             }
             catch (Exception e)
             {
-                initContextIsFailed = true;
                 var dataContextInitException = new DataContextInitException("Error in main form's data context initialization !!", e);
 
 

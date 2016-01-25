@@ -1,5 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TfsWitAdminTools.Core;
 
@@ -7,8 +10,46 @@ namespace TfsWitAdminTools.Service
 {
     public class WitAdminProcessService : IWitAdminProcessService
     {
+        #region Fields
+
         private readonly Process _process;
         public static readonly string WitAdminExecFileName = "witadmin.exe";
+
+        private StringBuilder _output = new StringBuilder();
+        private List<string> _splitedOutput = new List<string>();
+        private StringBuilder _error = new StringBuilder();
+
+        #endregion
+
+        #region Props
+
+        public string Output
+        {
+            get
+            {
+                return _output.ToString();
+            }
+        }
+
+        public List<string> SplitedOutput
+        {
+            get
+            {
+                return _splitedOutput;
+            }
+        }
+
+        public string Error
+        {
+            get
+            {
+                return _error.ToString();
+            }
+        }
+
+        #endregion
+
+        #region Ctor
 
         public WitAdminProcessService(string argument, IConfigProvider configProvider)
         {
@@ -29,39 +70,41 @@ namespace TfsWitAdminTools.Service
                 StartInfo = startInfo
             };
 
-            this._process = process;
+            process.OutputDataReceived += ((sender, e) =>
+            {
+                if (e.Data != null)
+                {
+                    _output.AppendLine(e.Data);
+                    _splitedOutput.Add(e.Data);
+                }
+            });
+
+            process.ErrorDataReceived += ((sender, e) =>
+            {
+                if (e.Data != null)
+                    _error.AppendLine(e.Data);
+            });
+
+            _process = process;
         }
 
-        public string ReadError()
-        {
-            string errorMessage = null;
-            errorMessage = _process.StandardError.ReadToEnd();
-            return errorMessage;
-        }
+        #endregion
 
-        public bool IsEndOfStream()
-        {
-            return _process.StandardOutput.EndOfStream;
-        }
-
-        public string ReadLine()
-        {
-            return _process.StandardOutput.ReadLine();
-        }
-
-        public string ReadToEnd()
-        {
-            return _process.StandardOutput.ReadToEnd();
-        }
+        #region Methods
 
         public async Task Start()
         {
             await Task.Run(() => _process.Start());
+
+            _process.BeginOutputReadLine();
+            _process.BeginErrorReadLine();
         }
 
         public void WaitForExit()
         {
             _process.WaitForExit();
         }
+
+        #endregion
     }
 }

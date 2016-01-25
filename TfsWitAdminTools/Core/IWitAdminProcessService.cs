@@ -10,11 +10,10 @@ namespace TfsWitAdminTools.Core
 {
     public interface IWitAdminProcessService
     {
+        string Output { get; }
+        List<string> SplitedOutput { get; }
+        string Error { get; }
         Task Start();
         void WaitForExit();
-        string ReadError();
-        string ReadToEnd();
-        string ReadLine();
-        bool IsEndOfStream();
     }
 }
