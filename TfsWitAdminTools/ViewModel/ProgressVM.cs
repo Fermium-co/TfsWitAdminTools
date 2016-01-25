@@ -62,7 +62,7 @@ namespace TfsWitAdminTools.ViewModel
 
         private void ProgressService_OnProgressFinished(object sender, ProgressFinishedEventArgs e)
         {
-            var succeedCount = e.Steps - e.FailedSteps;
+            var succeedCount = e.Steps - (e.Steps - (e.CurrentStep + 1)) - e.FailedSteps;
             Tools.Output += string.Format(
                 "Operation finished : {0} Total, {1} Succeed, {2} Failed.\n\n",
                 e.Steps, succeedCount, e.FailedSteps);

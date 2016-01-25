@@ -121,7 +121,7 @@ namespace TfsWitAdminTools.Service
             IWitAdminProcessService process = CreateProcess(argument);
 
             await process.Start();
-            //process.WaitForExit();
+            process.WaitForExit();
 
             string result = null;
             var errorMessage = process.ReadError();

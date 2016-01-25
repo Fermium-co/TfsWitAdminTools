@@ -23,7 +23,7 @@ namespace TfsWitAdminTools.Service
         {
             get
             {
-                return (_currentStep == _steps);
+                return (_currentStep == _steps - 1);
             }
         }
 
@@ -43,19 +43,19 @@ namespace TfsWitAdminTools.Service
         public void InitWork(int stepsCount)
         {
             _steps = stepsCount;
-            _currentStep = 0;
+            _currentStep = -1;
             _failedSteps = 0;
         }
 
         public void NextStep()
         {
             var lastStep = _steps - 1;
-            if (_currentStep <= lastStep)
+            if (_currentStep < lastStep)
                 _currentStep++;
             else
                 throw new Exception("Progress is finished!!");
 
-            if (_currentStep > lastStep)
+            if (IsFinished)
             {
                 var eventArgs = new ProgressFinishedEventArgs()
                 {
