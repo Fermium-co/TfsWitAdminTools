@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
+using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using TfsWitAdminTools.Cmn;
@@ -31,10 +33,12 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<IConfigProvider, ConfigProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IDialogProvider, DialogProvider>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<IWitAdminProcessService, WitAdminProcessService>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<IProgressService, ProgressService>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<IWitAdminService, WitAdminService>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<ITfsServerService, TFServerService>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<MainVM, MainVM>(lifeCycle: LifeCycle.Singletone);
             DiManager.Current.Register<ToolsVM, ToolsVM>(lifeCycle: LifeCycle.Transient);
+            DiManager.Current.Register<ProgressVM, ProgressVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDViewerVM, WIDViewerVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDExportVM, WIDExportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<WIDImportVM, WIDImportVM>(lifeCycle: LifeCycle.Transient);
@@ -45,7 +49,18 @@ namespace TfsWitAdminTools
             DiManager.Current.Register<CategoriesImportVM, CategoriesImportVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<ProcessConfigViewerVM, ProcessConfigViewerVM>(lifeCycle: LifeCycle.Transient);
             DiManager.Current.Register<ProcessConfigExportVM, ProcessConfigExportVM>(lifeCycle: LifeCycle.Transient);
-            DiManager.Current.Register<ProcessConfigImportVM, ProcessConfigImportVM>(lifeCycle: LifeCycle.Transient);    
+            DiManager.Current.Register<ProcessConfigImportVM, ProcessConfigImportVM>(lifeCycle: LifeCycle.Transient);
         }
+
+        private void Application_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
+        {
+            MessageBoxTools.ShowException(e.Exception);
+
+            LogFileTools.LogException(e.Exception);
+
+            e.Handled = true;
+        }
+
+        
     }
 }

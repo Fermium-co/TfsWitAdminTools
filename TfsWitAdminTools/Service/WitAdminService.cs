@@ -51,7 +51,7 @@ namespace TfsWitAdminTools.Service
         {
             string argument = string.Format("renamewitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /new:\"{4}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName, newName);
 
-            string result = await InvokeCommand(argument, true);
+            string result = await InvokeCommand(argument);
 
             return result;
         }
@@ -60,7 +60,7 @@ namespace TfsWitAdminTools.Service
         {
             string argument = string.Format("destroywitd /collection:{0}/{1} /p:{2} /n:\"{3}\" /noprompt", tfManager.TfsAddress, projectCollectionName, teamProjectName, workItemTypeName);
 
-            string result = await InvokeCommand(argument, true);
+            string result = await InvokeCommand(argument);
 
             return result;
         }
@@ -109,7 +109,7 @@ namespace TfsWitAdminTools.Service
 
         #region CoreMethods
 
-        public virtual async Task<string> InvokeCommand(string argument, bool isConfirmRequired = false)
+        public virtual async Task<string> InvokeCommand(string argument)
         {
             string result = await RunProcess(argument);
 
@@ -121,35 +121,41 @@ namespace TfsWitAdminTools.Service
             IWitAdminProcessService process = CreateProcess(argument);
 
             await process.Start();
-            //process.WaitForExit();
+            process.WaitForExit();
 
             string result = null;
             var errorMessage = process.ReadError();
             if (string.IsNullOrEmpty(errorMessage))
                 result = process.ReadToEnd();
             else
-                result = string.Format("Error : \n{0}", errorMessage);
+            {
+                errorMessage = string.Format("Error : \n{0}", errorMessage);
+                result = errorMessage;
+            }
 
             CommandInvokedEventArgs eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
             eventArg.Output = result;
             OnCommandInvoked(eventArg);
 
+            if (!string.IsNullOrEmpty(errorMessage))
+                throw new WitAdminException(errorMessage);
+
             return result;
         }
 
-        public async Task<string[]> InvokeCommandWithSplitedResult(string argument, bool isConfirmRequired = false)
+        public async Task<string[]> InvokeCommandWithSplitedResult(string argument)
         {
-            string[] results = await RunProcessWithSplitedResult(argument, isConfirmRequired);
+            string[] results = await RunProcessWithSplitedResult(argument);
 
             return results;
         }
 
-        private async Task<string[]> RunProcessWithSplitedResult(string argument, bool isConfirmRequired)
+        private async Task<string[]> RunProcessWithSplitedResult(string argument)
         {
             CommandInvokedEventArgs eventArg = null;
 
-            IWitAdminProcessService process = CreateProcess(argument, isConfirmRequired);
+            IWitAdminProcessService process = CreateProcess(argument);
             await process.Start();
             process.WaitForExit();
 
@@ -168,19 +174,25 @@ namespace TfsWitAdminTools.Service
                 }
             }
             else
-                resultText.AppendLine(string.Format("Error : \n{0}", errorMessage));
+            {
+                errorMessage = string.Format("Error : \n{0}", errorMessage);
+                resultText.AppendLine();
+            }
 
             eventArg = new CommandInvokedEventArgs();
             eventArg.Argument = argument;
             eventArg.Output = resultText.ToString();
             OnCommandInvoked(eventArg);
 
+            if (!string.IsNullOrEmpty(errorMessage))
+                throw new WitAdminException(errorMessage);
+
             return result.ToArray();
         }
 
-        public virtual IWitAdminProcessService CreateProcess(string argument, bool isConfirmationRequired = false)
+        public virtual IWitAdminProcessService CreateProcess(string argument)
         {
-            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument, isConfirmationRequired = isConfirmationRequired });
+            var process = DiManager.Current.Resolve<IWitAdminProcessService>(new { argument = argument});
             return process;
         }
 
@@ -199,12 +211,5 @@ namespace TfsWitAdminTools.Service
         }
 
         #endregion
-    }
-
-    public class CommandInvokedEventArgs : EventArgs
-    {
-        public string Argument { get; set; }
-
-        public string Output { get; set; }
     }
 }

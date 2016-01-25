@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TfsWitAdminTools.Cmn;
+using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
 
 namespace TfsWitAdminTools.ViewModel
@@ -25,16 +26,7 @@ namespace TfsWitAdminTools.ViewModel
 
             ImportCommand = new DelegateCommand(async () =>
             {
-                try
-                {
-                    Tools.BeginWorking();
-
-                    await Import();
-                }
-                finally
-                {
-                    Tools.EndWorking();
-                }
+                await Import();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -90,8 +82,26 @@ namespace TfsWitAdminTools.ViewModel
                 ? projectCollection.TeamProjectInfos
                 : new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
-            foreach (TeamProjectInfo teamProject in teamProjects)
-                await Import(projectCollection, teamProject, FileName);
+            Tools.Progress.BeginWorking(teamProjects.Count());
+            try
+            {
+                foreach (TeamProjectInfo teamProject in teamProjects)
+                {
+                    try
+                    {
+                        await Import(projectCollection, teamProject, FileName);
+                        Tools.Progress.NextStep();
+                    }
+                    catch (WitAdminException)
+                    {
+                        Tools.Progress.FailStep();
+                    }
+                }
+            }
+            finally
+            {
+                Tools.Progress.EndWorking();
+            }
         }
 
         private async Task Import(ProjectCollectionInfo projectCollection, TeamProjectInfo teamProject, string fileName)

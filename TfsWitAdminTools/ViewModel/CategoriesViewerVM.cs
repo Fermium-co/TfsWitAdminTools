@@ -1,5 +1,7 @@
 ﻿
 using System.Threading.Tasks;
+using TfsWitAdminTools.Core;
+
 namespace TfsWitAdminTools.ViewModel
 {
     public class CategoriesViewerVM : ToolsChildVM
@@ -33,10 +35,27 @@ namespace TfsWitAdminTools.ViewModel
         {
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
-            string categories = await Tools.WitAdminService
-                .ExportCategories(TFManager, projectCollectionName, teamProjectName);
+            string categories = null;
 
-            Tools.CurrentTeamProject.Categories = categories;
+            Tools.Progress.BeginWorking();
+            try
+            {
+                try
+                {
+                    categories = await Tools.WitAdminService
+                        .ExportCategories(TFManager, projectCollectionName, teamProjectName);
+                    Tools.Progress.NextStep();
+                }
+                catch (WitAdminException)
+                {
+                    Tools.Progress.FailStep();
+                }
+                Tools.CurrentTeamProject.Categories = categories;
+            }
+            finally
+            {
+                Tools.Progress.EndWorking();
+            }
         }
 
         #endregion

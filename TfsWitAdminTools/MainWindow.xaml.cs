@@ -28,20 +28,6 @@ namespace TfsWitAdminTools
         public MainWindow()
         {
             InitializeComponent();
-
-            Init();
-        }
-
-
-        private void Init()
-        {
-            Application.Current.Dispatcher.UnhandledException += OnDispatcherUnhandledException;
-        }
-
-        private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            MessageBox.Show(e.Exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            e.Handled = true;
         }
     }
 }

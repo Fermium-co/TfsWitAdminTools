@@ -25,16 +25,7 @@ namespace TfsWitAdminTools.ViewModel
 
             ImportCommand = new DelegateCommand(async () =>
             {
-                try
-                {
-                    Tools.BeginWorking();
-
-                    await Import();
-                }
-                finally
-                {
-                    Tools.EndWorking();
-                }
+                await Import();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -84,19 +75,35 @@ namespace TfsWitAdminTools.ViewModel
 
         private async Task Import()
         {
+
             TeamProjectInfo[] teamProjects = null;
             if (IsAllTeamProjects)
                 teamProjects = Tools.CurrentProjectCollection.TeamProjectInfos;
             else
                 teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
-            foreach (TeamProjectInfo teamProject in teamProjects)
+            Tools.Progress.BeginWorking(teamProjects.Length);
+            try
             {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = teamProject.Name;
+                foreach (TeamProjectInfo teamProject in teamProjects)
+                {
+                    string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                    string teamProjectName = teamProject.Name;
 
-                await Tools.WitAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName,
-                    FileName);
+                    try
+                    {
+                        await Tools.WitAdminService.ImportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, FileName);
+                        Tools.Progress.NextStep();
+                    }
+                    catch (WitAdminException)
+                    {
+                        Tools.Progress.FailStep();
+                    }
+                }
+            }
+            finally
+            {
+                Tools.Progress.EndWorking();
             }
         }
 

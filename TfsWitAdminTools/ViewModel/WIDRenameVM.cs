@@ -1,5 +1,6 @@
 ﻿
 using System.Threading.Tasks;
+using TfsWitAdminTools.Core;
 using TfsWitAdminTools.Model;
 namespace TfsWitAdminTools.ViewModel
 {
@@ -12,16 +13,7 @@ namespace TfsWitAdminTools.ViewModel
         {
             RenameCommand = new DelegateCommand(async () =>
             {
-                try
-                {
-                    Tools.BeginWorking();
-
-                    await Rename();
-                }
-                finally
-                {
-                    Tools.EndWorking();
-                }
+                await Rename();
             },
             () => (
                 Tools.CurrentProjectCollection != null &&
@@ -70,14 +62,30 @@ namespace TfsWitAdminTools.ViewModel
             else
                 teamProjects = new TeamProjectInfo[] { Tools.CurrentTeamProject };
 
-            foreach (TeamProjectInfo teamProject in teamProjects)
+            Tools.Progress.BeginWorking(teamProjects.Length);
+            try
             {
-                string projectCollectionName = Tools.CurrentProjectCollection.Name;
-                string teamProjectName = teamProject.Name;
-                string workItemTypeName = Tools.CurrentWorkItemType.Name;
+                foreach (TeamProjectInfo teamProject in teamProjects)
+                {
+                    string projectCollectionName = Tools.CurrentProjectCollection.Name;
+                    string teamProjectName = teamProject.Name;
+                    string workItemTypeName = Tools.CurrentWorkItemType.Name;
 
-                await Tools.WitAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
-                    NewName);
+                    try
+                    {
+                        await Tools.WitAdminService.RenameWorkItem(TFManager, projectCollectionName, teamProjectName, workItemTypeName,
+                            NewName);
+                        Tools.Progress.NextStep();
+                    }
+                    catch (WitAdminException)
+                    {
+                        Tools.Progress.FailStep();
+                    }
+                }
+            }
+            finally
+            {
+                Tools.Progress.EndWorking();
             }
         }
 

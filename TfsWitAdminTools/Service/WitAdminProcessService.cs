@@ -8,19 +8,19 @@ namespace TfsWitAdminTools.Service
     public class WitAdminProcessService : IWitAdminProcessService
     {
         private readonly Process _process;
-        private readonly string _confirmation = "Yes";
         public static readonly string WitAdminExecFileName = "witadmin.exe";
 
-        public WitAdminProcessService(string argument, bool isConfirmationRequired, IConfigProvider configProvider)
+        public WitAdminProcessService(string argument, IConfigProvider configProvider)
         {
-            ProcessStartInfo startInfo = new ProcessStartInfo()
+            var workingDirectory = configProvider.GetConfig("witAdminExecutableAddress");
+            var witAdminPath = string.Format("{0}\\{1}", workingDirectory, WitAdminExecFileName);
+            ProcessStartInfo startInfo = new ProcessStartInfo(witAdminPath)
             {
-                FileName = WitAdminExecFileName,
-                WorkingDirectory = configProvider.GetConfig("witAdminExecutableAddress"),
                 Arguments = argument,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
+                Verb = "runas",
                 CreateNoWindow = true
             };
 
@@ -34,7 +34,7 @@ namespace TfsWitAdminTools.Service
 
         public string ReadError()
         {
-            string errorMessage = null ;
+            string errorMessage = null;
             errorMessage = _process.StandardError.ReadToEnd();
             return errorMessage;
         }

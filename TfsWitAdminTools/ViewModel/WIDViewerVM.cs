@@ -1,5 +1,7 @@
 ﻿
 using System.Threading.Tasks;
+using TfsWitAdminTools.Core;
+
 namespace TfsWitAdminTools.ViewModel
 {
     public class WIDViewerVM : ToolsChildVM
@@ -29,10 +31,26 @@ namespace TfsWitAdminTools.ViewModel
             string projectCollectionName = Tools.CurrentProjectCollection.Name;
             string teamProjectName = Tools.CurrentTeamProject.Name;
             string workItemTypeName = Tools.CurrentWorkItemType.Name;
-            string workItemTypeDefenition = await Tools.WitAdminService
-                .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
-
-            Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
+            Tools.Progress.BeginWorking();
+            try
+            {
+                string workItemTypeDefenition = null;
+                try
+                {
+                    workItemTypeDefenition = await Tools.WitAdminService
+                        .ExportWorkItemDefenition(TFManager, projectCollectionName, teamProjectName, workItemTypeName);
+                    Tools.Progress.NextStep();
+                }
+                catch (WitAdminException)
+                {
+                    Tools.Progress.FailStep();
+                }
+                Tools.CurrentWorkItemType.Defenition = workItemTypeDefenition;
+            }
+            finally
+            {
+                Tools.Progress.EndWorking();
+            }
         }
 
         #endregion

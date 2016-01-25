@@ -6,9 +6,9 @@
              xmlns:local="clr-namespace:TfsWitAdminTools" 
              xmlns:localUserControl="clr-namespace:TfsWitAdminTools.UserControls" 
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:vm="clr-namespace:TfsWitAdminTools.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="800" d:DesignWidth="750"
-             DataContext="{Binding Source={StaticResource Locator}, Path=MainVM}">
+             d:DesignHeight="800" d:DesignWidth="750">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>

@@ -87,6 +87,7 @@ namespace TfsWitAdminTools.Cmn
                 TeamProjects.Add(nodeCollectionName, projectInfos);
 
                 WorkItemStore = projectCollection.GetService<WorkItemStore>();
+                //WorkItemStore = (WorkItemStore)projectCollection.GetService(typeof(WorkItemStore));
                 if (WorkItemStore == null)
                     throw new Exception("WorkItemStore not found!");
                 CommonStructureService4 = projectCollection.GetService<ICommonStructureService4>();
