@@ -16,7 +16,7 @@
         <Style TargetType="ComboBox" BasedOn="{StaticResource BaseStyle}"/>
         <Style TargetType="Button" BasedOn="{StaticResource BaseStyle}"/>
         <Style TargetType="Expander" BasedOn="{StaticResource BaseStyle}"/>
-        <Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>
+        <!--<Style TargetType="TextBlock" BasedOn="{StaticResource BaseStyle}"/>-->
         <Style TargetType="TabControl" BasedOn="{StaticResource BaseStyle}"/>
         <Style TargetType="localUserControl:TextEditorEx" BasedOn="{StaticResource BaseStyle}"/>
     </UserControl.Resources>
