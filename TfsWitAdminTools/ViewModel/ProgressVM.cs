@@ -5,17 +5,16 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 
 namespace TfsWitAdminTools.ViewModel
 {
     public class ProgressVM : ToolsChildVM
     {
-        #region Fields and Props 
+        #region Fields and Props
 
-        private Stack<IProgressService> _worksStack = new Stack<IProgressService>();
-
-        #region IsWorrking
+        private IProgressService _progressService;
 
         private bool _isWorrking;
 
@@ -26,25 +25,8 @@ namespace TfsWitAdminTools.ViewModel
             {
                 if (Set(ref _isWorrking, value))
                     Tools.ClearOutputCommand.RaiseCanExecuteChanged();
-
-                Mouse.OverrideCursor = (_isWorrking == true)
-                    ? Cursors.Wait : null;
             }
         }
-
-        public IProgressService CurrentProgressService
-        {
-            get
-            {
-                IProgressService currentProgressService = null;
-                if (_worksStack.Any())
-                    currentProgressService = _worksStack.Peek();
-
-                return currentProgressService;
-            }
-        }
-
-        #endregion
 
         #endregion
 
@@ -53,7 +35,7 @@ namespace TfsWitAdminTools.ViewModel
         public ProgressVM(ToolsVM tools)
             : base(tools)
         {
-
+            _progressService = DiManager.Current.Resolve<IProgressService>();
         }
 
         #endregion
@@ -66,6 +48,8 @@ namespace TfsWitAdminTools.ViewModel
             Tools.Output += string.Format(
                 "Operation finished : {0} Total, {1} Succeed, {2} Failed.\n\n",
                 e.Steps, succeedCount, e.FailedSteps);
+
+            _progressService.WorkFinished -= ProgressService_OnProgressFinished;
         }
 
         #endregion
@@ -77,33 +61,25 @@ namespace TfsWitAdminTools.ViewModel
             if (IsWorrking == false)
                 IsWorrking = true;
 
-            var progressService = DiManager.Current.Resolve<IProgressService>();
-            progressService.InitWork(stepsCount ?? 1);
-            progressService.ProgressFinished += ProgressService_OnProgressFinished;
-
-            _worksStack.Push(progressService);
+            _progressService.BeginWorking(stepsCount ?? 1);
+            _progressService.WorkFinished += ProgressService_OnProgressFinished;
         }
 
         public void NextStep()
         {
-            var currentProgressService = CurrentProgressService;
-            currentProgressService.NextStep();
+            var progressService = DiManager.Current.Resolve<IProgressService>();
+            _progressService.NextStep();
         }
 
         public void FailStep()
         {
-            var currentProgressService = CurrentProgressService;
-            currentProgressService.FailStep();
+            _progressService.FailStep();
         }
 
         public void EndWorking()
         {
-            var currentProgressService = CurrentProgressService;
-            currentProgressService.EndWork();
-
-            _worksStack.Pop();
-
-            if (!_worksStack.Any())
+            _progressService.EndWorking();
+            if (!_progressService.IsWorrking)
                 IsWorrking = false;
         }
 

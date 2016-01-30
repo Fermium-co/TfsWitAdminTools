@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using TfsWitAdminTools.Core;
 
-namespace TfsWitAdminTools.Service
+namespace TfsWitAdminTools.Cmn
 {
-    public class ProgressService : IProgressService
+    public class Work : IWork
     {
         #region Fields
 
@@ -31,7 +29,7 @@ namespace TfsWitAdminTools.Service
 
         #region Ctor 
 
-        public ProgressService()
+        public Work()
         {
 
         }
@@ -63,7 +61,7 @@ namespace TfsWitAdminTools.Service
                     CurrentStep = _currentStep,
                     FailedSteps = _failedSteps
                 };
-                OnProgressFinished(eventArgs);
+                OnWorkFinished(eventArgs);
             }
         }
 
@@ -83,7 +81,7 @@ namespace TfsWitAdminTools.Service
                 FailedSteps = _failedSteps
             };
             if (!IsFinished)
-                OnProgressFinished(eventArgs);
+                OnWorkFinished(eventArgs);
         }
 
         public void Reset()
@@ -95,12 +93,12 @@ namespace TfsWitAdminTools.Service
 
         #region Events 
 
-        public event EventHandler<ProgressFinishedEventArgs> ProgressFinished;
+        public event EventHandler<ProgressFinishedEventArgs> WorkFinished;
 
-        protected virtual void OnProgressFinished(ProgressFinishedEventArgs e)
+        protected virtual void OnWorkFinished(ProgressFinishedEventArgs e)
         {
-            if (ProgressFinished != null)
-                System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(ProgressFinished, this, e);
+            if (WorkFinished != null)
+                System.Windows.Threading.Dispatcher.CurrentDispatcher.BeginInvoke(WorkFinished, this, e);
         }
 
         #endregion
