@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TfsWitAdminTools.Core
+namespace TfsWitAdminTools.Cmn
 {
     public class ProgressFinishedEventArgs : EventArgs
     {

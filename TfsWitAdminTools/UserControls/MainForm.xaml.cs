@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using TfsWitAdminTools.Cmn;
 using TfsWitAdminTools.Core;
 using TfsWitAdminTools.ViewModel;
@@ -21,7 +22,15 @@ namespace TfsWitAdminTools.UserControls
 
             try
             {
+                var splashForm = new SplashForm();
+                splashForm.Show();
+                var progressService = DiManager.Current.Resolve<IProgressService>();
+                progressService.BeginWorking();
+
                 DataContext = DiManager.Current.Resolve<MainVM>();
+
+                progressService.EndWorking();
+                splashForm.Close();
             }
             catch (Exception e)
             {
@@ -44,7 +53,7 @@ namespace TfsWitAdminTools.UserControls
                     innerExceptionItem = innerExceptionItem.InnerException;
                 }
                 sb.AppendLine();
-                tempMessage= sb.ToString();
+                tempMessage = sb.ToString();
             }
 
             InitializeComponent();

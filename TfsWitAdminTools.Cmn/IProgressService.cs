@@ -4,22 +4,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TfsWitAdminTools.Core
+namespace TfsWitAdminTools.Cmn
 {
     public interface IProgressService
     {
-        event EventHandler<ProgressFinishedEventArgs> ProgressFinished;
+        event EventHandler<ProgressFinishedEventArgs> WorkFinished;
 
-        bool IsFinished { get; }
+        bool IsWorrking { get; }
 
-        void InitWork(int stepsCount);
+        void BeginWorking(int? stepsCount = null);
 
         void NextStep();
 
         void FailStep();
 
-        void EndWork();
-
-        void Reset();
+        void EndWorking();
     }
 }
