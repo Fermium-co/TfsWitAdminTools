@@ -114,14 +114,16 @@ namespace TfsWitAdminTools.ViewModel
             {
                 WorkItemTypeInfo[] workItemTypeInfos;
                 string path = Path;
-                if (IsAllWorkItemTypes)
+
+                if (IsAllTeamProjects)
                 {
-                    workItemTypeInfos = teamProject.WorkItemTypeInfos;
                     path = System.IO.Path.Combine(path, teamProject.Name);
                     System.IO.Directory.CreateDirectory(path);
                 }
-                else
-                    workItemTypeInfos = new WorkItemTypeInfo[] { Tools.CurrentWorkItemType };
+
+                workItemTypeInfos = (IsAllWorkItemTypes)
+                    ? teamProject.WorkItemTypeInfos
+                    : workItemTypeInfos = new WorkItemTypeInfo[] { Tools.CurrentWorkItemType };
 
                 Tools.Progress.BeginWorking(workItemTypeInfos.Length);
                 try
